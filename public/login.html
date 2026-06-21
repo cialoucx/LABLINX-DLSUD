@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to LabLinx DLSU-D</title>
+    <meta
+      name="description"
+      content="Sign in to LabLinx — DLSU-D's laboratory resource management system."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-dark: #00503b;
+        --primary: #00704f;
+        --primary-light: #009b6e;
+        --accent-gold: #ffcd00;
+        --accent-gold-hover: #e6b800;
+        --text-dark: #0f172a;
+        --text-body: #334155;
+        --text-subtle: #64748b;
+        --bg-light: #f8fafc;
+        --card-bg: #ffffff;
+        --border-light: #e2e8f0;
+        --input-border: #d1d5db;
+        --input-focus: #0d9488;
+        --font-heading: "Poppins", sans-serif;
+        --font-body: "Inter", "Poppins", sans-serif;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 20px;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        /* Dark mode */
+        --dm-bg: #0f172a;
+        --dm-card: #1e293b;
+        --dm-text: #f1f5f9;
+        --dm-text-subtle: #94a3b8;
+        --dm-border: #334155;
+        --dm-input-bg: #1e293b;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-body);
+        min-height: 100vh;
+        display: flex;
+        background: var(--bg-light);
+        color: var(--text-body);
+        transition:
+          background 0.4s ease,
+          color 0.4s ease;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body.dark-mode {
+        background: var(--dm-bg);
+        color: var(--dm-text);
+      }
+
+      /* ============ LEFT PANEL - Branding ============ */
+      .branding-panel {
+        width: 50%;
+        min-height: 100vh;
+        background: linear-gradient(
+          160deg,
+          #001a14 0%,
+          #003d2e 30%,
+          #00503b 55%,
+          #006d4a 80%,
+          #007a5a 100%
+        );
+        background-size: 200% 200%;
+        animation: gradientShift 15s ease infinite;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 3rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Hex pattern overlay */
+      .branding-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2314b8a6' fill-opacity='0.06'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .branding-panel .floating-shapes {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .branding-panel .shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .shape-1 {
+        width: 350px;
+        height: 350px;
+        top: -80px;
+        right: -60px;
+        animation: pulseRing 8s ease-in-out infinite;
+      }
+      .shape-2 {
+        width: 250px;
+        height: 250px;
+        bottom: -60px;
+        left: -40px;
+        animation: pulseRing 10s ease-in-out infinite 2s;
+      }
+      .shape-3 {
+        width: 120px;
+        height: 120px;
+        top: 35%;
+        left: 10%;
+        background: rgba(255, 205, 0, 0.06);
+        animation: floatShape 6s ease-in-out infinite;
+      }
+
+      @keyframes pulseRing {
+        0%,
+        100% {
+          transform: scale(0.85);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1);
+          opacity: 0.2;
+        }
+      }
+      @keyframes floatShape {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      .branding-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+        max-width: 480px;
+      }
+
+      .branding-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 2rem;
+      }
+
+      .branding-logo img {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+      }
+
+      .branding-logo span {
+        font-family: var(--font-heading);
+        font-weight: 800;
+        font-size: 1.8rem;
+        letter-spacing: -0.02em;
+      }
+
+      .branding-content h1 {
+        font-family: var(--font-heading);
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+
+      .branding-content h1 .gold {
+        color: var(--accent-gold);
+      }
+
+      .branding-content > p {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        opacity: 0.85;
+        margin-bottom: 2.5rem;
+      }
+
+      .branding-features {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: left;
+      }
+
+      .branding-feature {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 0.9rem 1.1rem;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-md);
+        transition: var(--transition);
+      }
+
+      .branding-feature:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateX(4px);
+      }
+
+      .branding-feature-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        border-radius: 8px;
+        background: rgba(255, 205, 0, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent-gold);
+      }
+
+      .branding-feature h4 {
+        font-family: var(--font-heading);
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .branding-feature p {
+        font-size: 0.8rem;
+        opacity: 0.7;
+        line-height: 1.5;
+      }
+
+      .branding-stats {
+        display: flex;
+        justify-content: center;
+        gap: 2.5rem;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .branding-stat {
+        text-align: center;
+      }
+
+      .branding-stat .num {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--accent-gold);
+      }
+
+      .branding-stat .lbl {
+        font-size: 0.75rem;
+        opacity: 0.6;
+        margin-top: 2px;
+      }
+
+      /* ============ RIGHT PANEL - Auth Form ============ */
+      .auth-panel {
+        width: 50%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        position: relative;
+        overflow-y: auto;
+      }
+
+      .dark-mode .auth-panel {
+        background: var(--dm-bg);
+      }
+
+      .auth-top-bar {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 10;
+      }
+
+      .back-home-link {
+        color: var(--text-subtle);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: var(--transition);
+        padding: 0.4rem 0.9rem;
+        border-radius: 50px;
+        border: 1px solid var(--border-light);
+      }
+
+      .back-home-link:hover {
+        color: var(--primary);
+        border-color: var(--primary);
+      }
+
+      .dark-mode .back-home-link {
+        color: var(--dm-text-subtle);
+        border-color: var(--dm-border);
+      }
+      .dark-mode .back-home-link:hover {
+        color: var(--accent-gold);
+        border-color: var(--accent-gold);
+      }
+
+      #mode-toggle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--bg-light);
+        border: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      #mode-toggle:hover {
+        background: var(--border-light);
+        transform: scale(1.05);
+      }
+      .dark-mode #mode-toggle {
+        background: var(--dm-card);
+        border-color: var(--dm-border);
+      }
+      .dark-mode #mode-toggle:hover {
+        background: var(--dm-border);
+      }
+      #mode-toggle img {
+        width: 18px;
+        height: 18px;
+      }
+      .dark-mode #mode-toggle img {
+        filter: invert(1);
+      }
+
+      .form-container {
+        width: 100%;
+        max-width: 420px;
+        animation: formSlideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes formSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-section {
+        display: none;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.4s ease,
+          transform 0.4s ease;
+      }
+      .form-section.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .mobile-logo {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 1.5rem;
+      }
+      .mobile-logo img {
+        width: 36px;
+        height: 36px;
+      }
+      .mobile-logo span {
+        font-family: var(--font-heading);
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: var(--primary-dark);
+      }
+      .dark-mode .mobile-logo span {
+        color: var(--accent-gold);
+      }
+
+      .form-header {
+        margin-bottom: 2rem;
+      }
+
+      .form-header h2 {
+        font-family: var(--font-heading);
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        margin-bottom: 0.4rem;
+        letter-spacing: -0.02em;
+      }
+
+      .dark-mode .form-header h2 {
+        color: var(--dm-text);
+      }
+
+      .form-header p {
+        color: var(--text-subtle);
+        font-size: 0.9rem;
+        margin: 0;
+      }
+      .dark-mode .form-header p {
+        color: var(--dm-text-subtle);
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+        margin-bottom: 6px;
+        margin-top: 1rem;
+      }
+      .dark-mode label {
+        color: var(--dm-text);
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        height: 46px;
+        padding: 0 14px;
+        border: 1.5px solid var(--input-border);
+        border-radius: var(--radius-sm);
+        font-size: 0.9rem;
+        font-family: var(--font-body);
+        background: var(--card-bg);
+        color: var(--text-dark);
+        transition: var(--transition);
+      }
+      textarea {
+        height: 110px;
+        padding: 12px 14px;
+        resize: vertical;
+      }
+      .dark-mode input,
+      .dark-mode select,
+      .dark-mode textarea {
+        background: var(--dm-input-bg);
+        border-color: var(--dm-border);
+        color: var(--dm-text);
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: #9ca3af;
+      }
+      .dark-mode input::placeholder,
+      .dark-mode textarea::placeholder {
+        color: #6b7280;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--input-focus);
+        box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+      }
+      .dark-mode input:focus,
+      .dark-mode select:focus,
+      .dark-mode textarea:focus {
+        border-color: #14b8a6;
+        box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+      }
+
+      .password-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .password-wrapper input {
+        padding-right: 44px;
+      }
+      .eye-icon {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        opacity: 0.5;
+        transition: opacity 0.2s;
+      }
+      .eye-icon:hover {
+        opacity: 0.8;
+      }
+      .dark-mode .eye-icon {
+        filter: invert(1);
+      }
+
+      button[type="submit"],
+      .btn-submit {
+        width: 100%;
+        height: 46px;
+        margin-top: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-heading);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        letter-spacing: 0.02em;
+      }
+      button[type="submit"]:hover,
+      .btn-submit:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 80, 59, 0.3);
+      }
+      .dark-mode button[type="submit"],
+      .dark-mode .btn-submit {
+        background: linear-gradient(135deg, #059669, #0d9488);
+      }
+      .dark-mode button[type="submit"]:hover,
+      .dark-mode .btn-submit:hover {
+        background: linear-gradient(135deg, #0d9488, #14b8a6);
+      }
+
+      .microsoft-btn {
+        width: 100%;
+        height: 46px;
+        background: var(--card-bg);
+        color: var(--text-body);
+        border: 1.5px solid var(--input-border);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 0.75rem;
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .microsoft-btn:hover {
+        background: var(--bg-light);
+        border-color: var(--text-subtle);
+        transform: translateY(-1px);
+      }
+      .microsoft-btn img {
+        width: 18px;
+        height: 18px;
+      }
+      .dark-mode .microsoft-btn {
+        background: var(--dm-card);
+        border-color: var(--dm-border);
+        color: var(--dm-text);
+      }
+      .dark-mode .microsoft-btn:hover {
+        background: var(--dm-border);
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 1.25rem 0;
+        color: var(--text-subtle);
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border-light);
+      }
+      .dark-mode .divider::before,
+      .dark-mode .divider::after {
+        background: var(--dm-border);
+      }
+
+      .form-footer {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-subtle);
+      }
+      .dark-mode .form-footer {
+        color: var(--dm-text-subtle);
+      }
+      .form-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .form-footer a:hover {
+        color: var(--primary-light);
+        text-decoration: underline;
+      }
+      .dark-mode .form-footer a {
+        color: #5eead4;
+      }
+
+      .form-links {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+        font-size: 0.85rem;
+      }
+      .form-links a {
+        color: var(--text-subtle);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .form-links a:hover {
+        color: var(--primary);
+      }
+      .dark-mode .form-links a {
+        color: var(--dm-text-subtle);
+      }
+      .dark-mode .form-links a:hover {
+        color: #5eead4;
+      }
+
+      .register-toggle {
+        display: flex;
+        gap: 0;
+        margin-bottom: 1.5rem;
+        background: var(--bg-light);
+        border-radius: var(--radius-sm);
+        padding: 4px;
+        border: 1px solid var(--border-light);
+      }
+      .dark-mode .register-toggle {
+        background: var(--dm-card);
+        border-color: var(--dm-border);
+      }
+      .register-toggle button {
+        flex: 1;
+        height: 38px;
+        margin: 0;
+        padding: 0;
+        border: none;
+        border-radius: 6px;
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: transparent;
+        color: var(--text-subtle);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .register-toggle button.active {
+        background: var(--card-bg);
+        color: var(--primary-dark);
+        box-shadow: var(--shadow-sm);
+      }
+      .dark-mode .register-toggle button {
+        color: var(--dm-text-subtle);
+      }
+      .dark-mode .register-toggle button.active {
+        background: var(--dm-border);
+        color: var(--dm-text);
+      }
+
+      .faq-item {
+        text-align: left;
+        margin-bottom: 1.25rem;
+        padding: 1rem 1.25rem;
+        background: var(--bg-light);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-light);
+      }
+      .dark-mode .faq-item {
+        background: var(--dm-card);
+        border-color: var(--dm-border);
+      }
+      .faq-item h3 {
+        font-family: var(--font-heading);
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 0.4rem;
+      }
+      .dark-mode .faq-item h3 {
+        color: #5eead4;
+      }
+      .faq-item p {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: var(--text-subtle);
+        margin: 0;
+      }
+      .dark-mode .faq-item p {
+        color: var(--dm-text-subtle);
+      }
+
+      /* Toast */
+      #toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 2000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .toast {
+        padding: 12px 20px;
+        background: var(--text-dark);
+        color: white;
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-lg);
+        opacity: 0;
+        transform: translateX(100%);
+        transition:
+          opacity 0.4s,
+          transform 0.4s;
+        font-size: 0.85rem;
+        font-weight: 500;
+        max-width: 350px;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      /* Nav bar at bottom of auth panel */
+      .nav-bar {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-light);
+      }
+      .dark-mode .nav-bar {
+        border-color: var(--dm-border);
+      }
+      .nav-link {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-subtle);
+        text-decoration: none;
+        transition: color 0.2s;
+        padding: 0.3rem 0.6rem;
+        border-radius: 6px;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--primary);
+        background: rgba(0, 112, 79, 0.06);
+      }
+      .dark-mode .nav-link {
+        color: var(--dm-text-subtle);
+      }
+      .dark-mode .nav-link:hover,
+      .dark-mode .nav-link.active {
+        color: #5eead4;
+        background: rgba(94, 234, 212, 0.08);
+      }
+
+      .school-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 50px;
+        padding: 0.35rem 1rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1.5rem;
+      }
+
+      .school-badge .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent-gold);
+        animation: pulseRing 2s ease-in-out infinite;
+      }
+
+      .help-links p {
+        font-size: 0.85rem;
+        line-height: 1.8;
+        color: var(--text-subtle);
+      }
+      .dark-mode .help-links p {
+        color: var(--dm-text-subtle);
+      }
+      .help-links a {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .help-links a:hover {
+        text-decoration: underline;
+      }
+      .dark-mode .help-links a {
+        color: #5eead4;
+      }
+
+      /* ============ Responsive ============ */
+      @media (max-width: 1024px) {
+        .branding-panel {
+          width: 45%;
+          padding: 2rem;
+        }
+        .auth-panel {
+          width: 55%;
+        }
+        .branding-content h1 {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+        .branding-panel {
+          display: none;
+        }
+        .auth-panel {
+          width: 100%;
+          min-height: 100vh;
+          padding: 1.5rem;
+          padding-top: 4rem;
+        }
+        .mobile-logo {
+          display: flex;
+        }
+        .auth-top-bar {
+          top: 1rem;
+          right: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .form-container {
+          max-width: 100%;
+        }
+        .form-header h2 {
+          font-size: 1.5rem;
+        }
+        .nav-bar {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+      }
+
+      /* Demo Credentials Section */
+      .demo-login-container {
+        margin-top: 1.5rem;
+        text-align: center;
+        width: 100%;
+      }
+      .demo-badge-list {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 0.75rem;
+      }
+      .demo-badge {
+        flex: 1;
+        height: 40px;
+        background: rgba(0, 112, 79, 0.06);
+        border: 1px solid rgba(0, 112, 79, 0.15);
+        border-radius: var(--radius-sm);
+        color: var(--primary-dark);
+        font-family: var(--font-body);
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: var(--transition);
+      }
+      .demo-badge:hover {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 80, 59, 0.15);
+      }
+      .dark-mode .demo-badge {
+        background: rgba(94, 234, 212, 0.06);
+        border-color: rgba(94, 234, 212, 0.15);
+        color: #5eead4;
+      }
+      .dark-mode .demo-badge:hover {
+        background: #0d9488;
+        color: white;
+        border-color: #0d9488;
+        box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+      }
+      .demo-badge-icon {
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="toast-container"></div>
+
+    <!-- ============ LEFT: Branding Panel ============ -->
+    <div class="branding-panel">
+      <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+      </div>
+      <div class="branding-content">
+        <div class="branding-logo">
+          <img src="logo.png" alt="LabLinx" />
+          <span>LabLinx</span>
+        </div>
+        <div class="school-badge">
+          <span class="dot"></span>
+          De La Salle University-Dasmariñas
+        </div>
+        <h1>
+          Your Lab Resources,<br /><span class="gold">One Click Away.</span>
+        </h1>
+        <p>
+          The smart digital platform that replaces paper logbooks. Track
+          equipment, manage borrows, and stay on top of your lab schedule.
+        </p>
+        <div class="branding-features">
+          <div class="branding-feature">
+            <div class="branding-feature-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="18"
+                height="18"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div>
+              <h4>Real-Time Tracking</h4>
+              <p>
+                See live availability of all lab equipment and facilities
+                instantly.
+              </p>
+            </div>
+          </div>
+          <div class="branding-feature">
+            <div class="branding-feature-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="18"
+                height="18"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <div>
+              <h4>Secure & Accountable</h4>
+              <p>
+                Microsoft SSO login with full audit logs for every transaction.
+              </p>
+            </div>
+          </div>
+          <div class="branding-feature">
+            <div class="branding-feature-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="18"
+                height="18"
+              >
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 01-3.46 0" />
+              </svg>
+            </div>
+            <div>
+              <h4>Smart Notifications</h4>
+              <p>
+                Automatic email alerts for due dates, approvals, and overdue
+                items.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="branding-stats">
+          <div class="branding-stat">
+            <div class="num">500+</div>
+            <div class="lbl">Active Users</div>
+          </div>
+          <div class="branding-stat">
+            <div class="num">1,200+</div>
+            <div class="lbl">Items Tracked</div>
+          </div>
+          <div class="branding-stat">
+            <div class="num">99.9%</div>
+            <div class="lbl">Uptime</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ RIGHT: Auth Panel ============ -->
+    <div class="auth-panel">
+      <div class="auth-top-bar">
+        <a href="/" class="back-home-link">&larr; Home</a>
+        <div id="mode-toggle">
+          <img
+            id="mode-icon"
+            src="https://api.iconify.design/mdi:moon-waning-crescent.svg"
+            alt="Toggle theme"
+          />
+        </div>
+      </div>
+
+      <div class="form-container">
+        <div class="mobile-logo">
+          <img src="logo.png" alt="LabLinx" />
+          <span>LabLinx</span>
+        </div>
+
+        <div id="auth-section" class="form-section active">
+          <div id="login-section">
+            <div class="form-header">
+              <h2>Welcome back</h2>
+              <p>Sign in to your LabLinx account to continue.</p>
+            </div>
+            <form id="loginForm">
+              <label for="loginUsername">Username</label>
+              <input
+                type="text"
+                id="loginUsername"
+                name="username"
+                required
+                placeholder="Enter your username"
+              />
+
+              <label for="loginPassword">Password</label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="loginPassword"
+                  name="password"
+                  required
+                  placeholder="Enter your password"
+                />
+              </div>
+
+              <button type="submit">Sign In</button>
+
+              <div class="divider">or continue with</div>
+              <button
+                type="button"
+                id="microsoftLoginBtn"
+                class="microsoft-btn"
+              >
+                <img
+                  src="https://api.iconify.design/logos:microsoft-icon.svg"
+                  alt="Microsoft"
+                />
+                Sign in with Microsoft
+              </button>
+
+              <div class="demo-login-container">
+                <div class="divider">demo credentials</div>
+                <div class="demo-badge-list">
+                  <button type="button" class="demo-badge demo-quick-login" data-username="admin" data-password="admin123">
+                    <span class="demo-badge-icon">👑</span> Admin
+                  </button>
+                  <button type="button" class="demo-badge demo-quick-login" data-username="faculty" data-password="faculty123">
+                    <span class="demo-badge-icon">🏫</span> Faculty
+                  </button>
+                  <button type="button" class="demo-badge demo-quick-login" data-username="student" data-password="student123">
+                    <span class="demo-badge-icon">🎓</span> Student
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div class="form-links">
+              <a href="#" id="show-forgot-password">Forgot password?</a>
+              <a href="#" id="show-register-menu">Create account</a>
+            </div>
+          </div>
+
+          <div id="registration-menu" style="display: none">
+            <div class="form-header">
+              <h2>Create your account</h2>
+              <p>Register to start managing lab resources digitally.</p>
+            </div>
+            <div class="register-toggle">
+              <button id="show-student-register" class="active">Student</button>
+              <button id="show-faculty-register">Faculty / Staff</button>
+            </div>
+
+            <div id="student-register-section">
+              <form id="registerForm">
+                <label for="lastName">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  required
+                  placeholder="Enter your last name"
+                />
+
+                <label for="firstName">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  required
+                  placeholder="Enter your first name"
+                />
+
+                <label for="username">Username</label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  required
+                  placeholder="Create a username"
+                />
+
+                <label for="studentID">Student ID (School ID)</label>
+                <input
+                  type="text"
+                  id="studentID"
+                  name="studentID"
+                  required
+                  placeholder="Enter your Student ID"
+                />
+
+                <label for="email">School Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="yourID@dlsud.edu.ph"
+                />
+
+                <label for="gradeLevel">Grade Level</label>
+                <select id="gradeLevel" name="gradeLevel" required>
+                  <option value="">Select Grade Level</option>
+                  <option value="7">Grade 7</option>
+                  <option value="8">Grade 8</option>
+                  <option value="9">Grade 9</option>
+                  <option value="10">Grade 10</option>
+                  <option value="11">Grade 11</option>
+                  <option value="12">Grade 12</option>
+                </select>
+
+                <button type="submit">Register as Student</button>
+              </form>
+              <div class="form-footer">
+                Already have an account? <a id="show-login">Sign in</a>
+              </div>
+            </div>
+
+            <div id="faculty-register-section" style="display: none">
+              <form id="facultyRegisterForm">
+                <input type="hidden" name="role" value="faculty" />
+
+                <label for="facultyLastName">Last Name</label>
+                <input
+                  type="text"
+                  id="facultyLastName"
+                  name="lastName"
+                  required
+                  placeholder="Enter your last name"
+                />
+
+                <label for="facultyFirstName">First Name</label>
+                <input
+                  type="text"
+                  id="facultyFirstName"
+                  name="firstName"
+                  required
+                  placeholder="Enter your first name"
+                />
+
+                <label for="facultyUsername">Username</label>
+                <input
+                  type="text"
+                  id="facultyUsername"
+                  name="username"
+                  required
+                  placeholder="Create a username"
+                />
+
+                <label for="facultySchoolID">School ID (Employee ID)</label>
+                <input
+                  type="text"
+                  id="facultySchoolID"
+                  name="studentID"
+                  required
+                  placeholder="Enter your Employee ID (e.g., F1234)"
+                />
+
+                <label for="facultyEmail">School Email</label>
+                <input
+                  type="email"
+                  id="facultyEmail"
+                  name="email"
+                  required
+                  placeholder="facultyID@dlsud.edu.ph"
+                />
+
+                <button type="submit">Register as Faculty / Staff</button>
+              </form>
+              <div class="form-footer">
+                Already have an account? <a id="show-login-faculty">Sign in</a>
+              </div>
+            </div>
+          </div>
+
+          <div id="forgot-password-section" style="display: none">
+            <div class="form-header">
+              <h2>Reset your password</h2>
+              <p>
+                Enter your school email and we'll send you a password reset
+                link.
+              </p>
+            </div>
+            <form id="forgotPasswordForm">
+              <label for="forgotEmail">School Email</label>
+              <input
+                type="email"
+                id="forgotEmail"
+                name="email"
+                required
+                placeholder="yourID@dlsud.edu.ph"
+              />
+              <button type="submit">Send Reset Link</button>
+            </form>
+            <div class="form-footer">
+              Remember your password? <a id="show-login-from-forgot">Sign in</a>
+            </div>
+          </div>
+        </div>
+
+        <div id="faq-section" class="form-section">
+          <div class="form-header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Quick answers to common questions about LabLinx.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What if my registration is still pending?</h3>
+            <p>
+              New registrations require admin approval. You'll receive a
+              confirmation email within 1-2 business days. Check your Outlook
+              junk folder.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Where do I find email confirmations?</h3>
+            <p>
+              Check your Outlook junk email folder — automated messages from
+              LabLinx sometimes get filtered there.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I use LabLinx on my phone?</h3>
+            <p>
+              Yes! LabLinx is fully responsive and works on any device with a
+              web browser — desktop, tablet, or smartphone.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>How do I borrow equipment?</h3>
+            <p>
+              Once logged in, browse the inventory, select the items you need,
+              and submit a borrow request. You'll be notified when it's
+              approved.
+            </p>
+          </div>
+        </div>
+
+        <div id="contact-section" class="form-section">
+          <div class="form-header">
+            <h2>Contact Us</h2>
+            <p>Have a question or need help? Send us a message.</p>
+          </div>
+          <form id="contactForm">
+            <label for="contactName">Your Name</label>
+            <input
+              type="text"
+              id="contactName"
+              name="contactName"
+              required
+              placeholder="Enter your full name"
+            />
+
+            <label for="contactEmail">Your Email</label>
+            <input
+              type="email"
+              id="contactEmail"
+              name="contactEmail"
+              required
+              placeholder="Enter your email address"
+            />
+
+            <label for="contactMessage">Message</label>
+            <textarea
+              id="contactMessage"
+              name="contactMessage"
+              required
+              placeholder="Describe your issue or question..."
+            ></textarea>
+
+            <button type="submit">Send Message</button>
+          </form>
+        </div>
+
+        <div id="help-section" class="form-section">
+          <div class="form-header">
+            <h2>Need Help?</h2>
+            <p>Find the support you need to get started with LabLinx.</p>
+          </div>
+          <div class="help-links">
+            <p>
+              For common issues, visit our
+              <a class="nav-link" href="#" data-section="faq-section"
+                >FAQ page</a
+              >.
+            </p>
+            <p>
+              For specific inquiries,
+              <a class="nav-link" href="#" data-section="contact-section"
+                >contact our support team</a
+              >
+              directly.
+            </p>
+            <p>Our team is available Monday – Friday, 8:00 AM – 5:00 PM.</p>
+          </div>
+        </div>
+
+        <div class="nav-bar">
+          <a href="#" class="nav-link active" data-section="auth-section"
+            >Home</a
+          >
+          <a href="#" class="nav-link" data-section="faq-section">FAQ</a>
+          <a href="#" class="nav-link" data-section="contact-section"
+            >Contact</a
+          >
+          <a href="#" class="nav-link" data-section="help-section">Help</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/login.js"></script>
+  </body>
+</html>

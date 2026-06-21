@@ -1,0 +1,2950 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LabLinx DLSU-D - Laboratory Resource Management System</title>
+    <meta
+      name="description"
+      content="LabLinx is DLSU-D's smart laboratory resource management system. Track, borrow, and manage lab equipment digitally."
+    />
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-dark: #00503b;
+        --primary: #00704f;
+        --primary-light: #009b6e;
+        --accent-gold: #ffcd00;
+        --accent-gold-hover: #e6b800;
+        --text-dark: #0f172a;
+        --text-body: #334155;
+        --text-subtle: #64748b;
+        --background-light: #f8fafc;
+        --background-warm: #f0fdf4;
+        --card-bg: #ffffff;
+        --border-light: #e2e8f0;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.12);
+        --font-heading: "Poppins", sans-serif;
+        --font-body: "Inter", sans-serif;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 20px;
+        --radius-xl: 24px;
+        --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body,
+      html {
+        font-family: var(--font-body);
+        background-color: var(--background-light);
+        color: var(--text-body);
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      @keyframes pulse-ring {
+        0% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1);
+          opacity: 0.2;
+        }
+        100% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+      }
+      @keyframes gradient-shift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .animate-fade-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .animate-fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Header Navigation */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        z-index: 1000;
+        padding: 0.75rem 2rem;
+        transition: var(--transition-base);
+      }
+
+      header.scrolled {
+        box-shadow: var(--shadow-md);
+        padding: 0.5rem 2rem;
+      }
+
+      .header-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--text-dark);
+      }
+
+      .logo-container img {
+        width: 38px;
+        height: 38px;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-container:hover img {
+        transform: rotate(-5deg) scale(1.05);
+      }
+
+      .logo-container span {
+        font-family: var(--font-heading);
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--primary-dark);
+        letter-spacing: -0.02em;
+      }
+
+      .logo-container .logo-suffix {
+        font-weight: 500;
+        font-size: 0.75rem;
+        color: var(--text-subtle);
+        margin-left: -6px;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      nav a {
+        color: var(--text-body);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: var(--transition-base);
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-sm);
+      }
+
+      nav a:hover {
+        color: var(--primary-dark);
+        background-color: var(--background-warm);
+      }
+
+      .btn-login {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
+        color: white !important;
+        padding: 0.6rem 1.5rem !important;
+        border-radius: 50px !important;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition-base);
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+        letter-spacing: 0.01em;
+      }
+
+      .btn-login:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-light)
+        ) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 80, 59, 0.35);
+      }
+
+      .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-dark);
+        padding: 0.25rem;
+        border-radius: var(--radius-sm);
+        transition: background 0.2s;
+      }
+
+      .mobile-menu-toggle:hover {
+        background: var(--background-warm);
+      }
+
+      /* Hero Section */
+      .hero-section {
+        margin-top: 65px;
+        position: relative;
+        min-height: 92vh;
+        background: linear-gradient(
+          160deg,
+          #001a14 0%,
+          #003d2e 30%,
+          #00503b 55%,
+          #006d4a 80%,
+          #007a5a 100%
+        );
+        background-size: 200% 200%;
+        animation: gradient-shift 12s ease infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      /* Scientific hexagonal overlay for hero */
+      .hero-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2314b8a6' fill-opacity='0.06'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .hero-shapes {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .hero-shapes .shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .hero-shapes .shape-1 {
+        width: 500px;
+        height: 500px;
+        top: -150px;
+        right: -100px;
+        animation: pulse-ring 8s ease-in-out infinite;
+      }
+      .hero-shapes .shape-2 {
+        width: 350px;
+        height: 350px;
+        bottom: -100px;
+        left: -80px;
+        animation: pulse-ring 10s ease-in-out infinite 2s;
+      }
+      .hero-shapes .shape-3 {
+        width: 200px;
+        height: 200px;
+        top: 40%;
+        left: 15%;
+        animation: pulse-ring 7s ease-in-out infinite 1s;
+      }
+      .hero-shapes .shape-4 {
+        width: 120px;
+        height: 120px;
+        top: 20%;
+        right: 20%;
+        background: rgba(255, 205, 0, 0.08);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+        max-width: 850px;
+        padding: 2rem;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: fadeIn 1s ease-out 0.3s both;
+      }
+
+      .hero-badge .badge-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--accent-gold);
+        border-radius: 50%;
+        animation: pulse-ring 2s ease-in-out infinite;
+      }
+
+      .hero-content h1 {
+        font-family: var(--font-heading);
+        font-size: 3.8rem;
+        font-weight: 800;
+        margin-bottom: 1.25rem;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+      }
+
+      .hero-content h1 .highlight {
+        color: var(--accent-gold);
+        position: relative;
+      }
+
+      .hero-content .hero-description {
+        font-size: 1.2rem;
+        line-height: 1.7;
+        opacity: 0.92;
+        max-width: 650px;
+        margin: 0 auto 2.5rem;
+        animation: fadeInUp 1s ease-out 0.2s both;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: fadeInUp 1s ease-out 0.4s both;
+      }
+
+      .btn-hero-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--accent-gold);
+        color: var(--primary-dark);
+        padding: 0.9rem 2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: var(--transition-bounce);
+        border: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+      }
+
+      .btn-hero-primary:hover {
+        background: var(--accent-gold-hover);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(255, 205, 0, 0.4);
+      }
+
+      .btn-hero-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        padding: 0.9rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: var(--transition-base);
+        border: 1.5px solid rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+      }
+
+      .btn-hero-secondary:hover {
+        background: rgba(255, 255, 255, 0.22);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+      }
+
+      /* Stats Bar */
+      .stats-bar {
+        background: var(--card-bg);
+        border-bottom: 1px solid var(--border-light);
+        padding: 2rem;
+      }
+
+      .stats-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 0.5rem;
+      }
+
+      .stat-number {
+        font-family: var(--font-heading);
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--primary-dark);
+        line-height: 1;
+        margin-bottom: 0.35rem;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-subtle);
+        font-weight: 500;
+      }
+
+      /* Features Section */
+      .features-section {
+        padding: 6rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-label {
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--primary);
+        margin-bottom: 0.75rem;
+      }
+
+      .section-title {
+        text-align: center;
+        font-family: var(--font-heading);
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.02em;
+      }
+
+      .section-subtitle {
+        text-align: center;
+        color: var(--text-subtle);
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        max-width: 550px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-top: 3.5rem;
+      }
+
+      .feature-card {
+        background-color: var(--card-bg);
+        border-radius: var(--radius-lg);
+        padding: 2.25rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-light);
+        transition: var(--transition-bounce);
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: rgba(0, 80, 59, 0.15);
+      }
+
+      .feature-icon {
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary-light)
+        );
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        transition: var(--transition-base);
+      }
+
+      .feature-card:hover .feature-icon {
+        transform: scale(1.08);
+      }
+
+      .feature-text h3 {
+        font-family: var(--font-heading);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.6rem;
+      }
+
+      .feature-text p {
+        color: var(--text-subtle);
+        line-height: 1.65;
+        font-size: 0.92rem;
+      }
+
+      /* Contact Section */
+      .contact-section {
+        padding: 6rem 2rem;
+        background-color: var(--card-bg);
+      }
+
+      .contact-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+
+      .contact-card {
+        background-color: var(--background-light);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        border: 1px solid var(--border-light);
+        transition: var(--transition-base);
+      }
+
+      .contact-card:hover {
+        border-color: rgba(0, 80, 59, 0.15);
+        box-shadow: var(--shadow-md);
+      }
+
+      .contact-card-icon {
+        width: 44px;
+        height: 44px;
+        background: var(--background-warm);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+      }
+
+      .contact-card h3 {
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.75rem;
+      }
+
+      .contact-card p {
+        color: var(--text-subtle);
+        line-height: 1.65;
+        margin-bottom: 0.4rem;
+        font-size: 0.92rem;
+      }
+
+      .contact-card strong {
+        color: var(--text-dark);
+      }
+
+      .hours-info {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
+        color: white;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3rem;
+        flex-wrap: wrap;
+      }
+
+      .hours-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .hours-info-item .hours-icon {
+        font-size: 1.5rem;
+      }
+
+      .hours-info-text h3 {
+        color: white;
+        font-family: var(--font-heading);
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.15rem;
+      }
+
+      .hours-info-text p {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.88rem;
+        margin-bottom: 0;
+      }
+
+      /* How It Works Section */
+      .how-it-works-section {
+        padding: 6rem 2rem;
+        background: var(--background-warm);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .how-it-works-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 112, 79, 0.15),
+          transparent
+        );
+      }
+
+      .steps-container {
+        max-width: 1200px;
+        margin: 3.5rem auto 0;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        position: relative;
+      }
+
+      .steps-container::before {
+        content: "";
+        position: absolute;
+        top: 44px;
+        left: 12.5%;
+        right: 12.5%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-light),
+          var(--accent-gold),
+          var(--primary-light)
+        );
+        z-index: 0;
+        opacity: 0.3;
+      }
+
+      .step-card {
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .step-number {
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-heading);
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin: 0 auto 1.25rem;
+        box-shadow: 0 4px 16px rgba(0, 80, 59, 0.25);
+        transition: var(--transition-bounce);
+      }
+
+      .step-card:hover .step-number {
+        transform: scale(1.1);
+        box-shadow: 0 6px 24px rgba(0, 80, 59, 0.35);
+      }
+
+      .step-card h3 {
+        font-family: var(--font-heading);
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .step-card p {
+        color: var(--text-subtle);
+        font-size: 0.88rem;
+        line-height: 1.6;
+        max-width: 220px;
+        margin: 0 auto;
+      }
+
+      /* Why LabLinx Section */
+      .why-section {
+        padding: 6rem 2rem;
+        background: linear-gradient(
+          160deg,
+          #001a14 0%,
+          #003d2e 30%,
+          #00503b 55%,
+          #004d3b 100%
+        );
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .why-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2314b8a6' fill-opacity='0.04'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        pointer-events: none;
+      }
+
+      .why-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      .why-section .section-label {
+        color: var(--accent-gold);
+      }
+
+      .why-section .section-title {
+        color: white;
+      }
+
+      .why-section .section-subtitle {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .why-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 3.5rem;
+      }
+
+      .why-card {
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        transition: var(--transition-bounce);
+      }
+
+      .why-card:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 205, 0, 0.2);
+      }
+
+      .why-card-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 205, 0, 0.15),
+          rgba(13, 148, 136, 0.15)
+        );
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        color: var(--accent-gold);
+      }
+
+      .why-card h3 {
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+        color: white;
+      }
+
+      .why-card p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        line-height: 1.65;
+      }
+
+      /* Testimonial Section */
+      .testimonials-section {
+        padding: 6rem 2rem;
+        background: var(--card-bg);
+        position: relative;
+      }
+
+      .testimonials-grid {
+        max-width: 1200px;
+        margin: 3.5rem auto 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+
+      .testimonial-card {
+        background: var(--background-light);
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        transition: var(--transition-base);
+        position: relative;
+      }
+
+      .testimonial-card:hover {
+        box-shadow: var(--shadow-md);
+        border-color: rgba(0, 80, 59, 0.15);
+      }
+
+      .testimonial-card::before {
+        content: "\201C";
+        position: absolute;
+        top: 12px;
+        left: 20px;
+        font-size: 4rem;
+        font-family: Georgia, serif;
+        color: var(--primary-light);
+        opacity: 0.15;
+        line-height: 1;
+      }
+
+      .testimonial-text {
+        color: var(--text-body);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        font-style: italic;
+        margin-bottom: 1.25rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .testimonial-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary-light)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+      }
+
+      .testimonial-info h4 {
+        font-family: var(--font-heading);
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      .testimonial-info p {
+        font-size: 0.8rem;
+        color: var(--text-subtle);
+      }
+
+      /* Dashboard Preview Section */
+      .preview-section {
+        padding: 6rem 2rem 4rem;
+        text-align: center;
+        background: var(--background-light);
+      }
+
+      .preview-container {
+        max-width: 1000px;
+        margin: 3rem auto 0;
+        position: relative;
+      }
+
+      .preview-mockup {
+        width: 100%;
+        background: linear-gradient(
+          135deg,
+          #001a14 0%,
+          #003d2e 50%,
+          #00503b 100%
+        );
+        border-radius: var(--radius-xl);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-xl);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .preview-mockup-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .preview-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .preview-dot.red {
+        background: #ef4444;
+      }
+      .preview-dot.yellow {
+        background: #f59e0b;
+      }
+      .preview-dot.green {
+        background: #22c55e;
+      }
+
+      .preview-mockup-body {
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius-md);
+        padding: 2rem;
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 1.5rem;
+        min-height: 320px;
+      }
+
+      .preview-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .preview-sidebar-item {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-sm);
+        padding: 0.6rem 1rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.8rem;
+        text-align: left;
+        transition: var(--transition-base);
+      }
+
+      .preview-sidebar-item.active {
+        background: rgba(13, 148, 136, 0.3);
+        color: white;
+        border-left: 2px solid var(--accent-gold);
+      }
+
+      .preview-main {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto 1fr;
+        gap: 1rem;
+      }
+
+      .preview-stat-card {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-sm);
+        padding: 1rem;
+        text-align: left;
+      }
+
+      .preview-stat-card .mini-label {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.3rem;
+      }
+
+      .preview-stat-card .mini-value {
+        color: white;
+        font-family: var(--font-heading);
+        font-size: 1.4rem;
+        font-weight: 700;
+      }
+
+      .preview-chart {
+        grid-column: 1 / -1;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-sm);
+        padding: 1rem;
+        display: flex;
+        align-items: flex-end;
+        gap: 6px;
+      }
+
+      .preview-bar {
+        flex: 1;
+        background: linear-gradient(
+          to top,
+          var(--primary-light),
+          rgba(13, 148, 136, 0.4)
+        );
+        border-radius: 4px 4px 0 0;
+        min-height: 20px;
+        transition: height 0.5s ease;
+      }
+
+      .preview-glow {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(13, 148, 136, 0.2),
+          transparent 70%
+        );
+        pointer-events: none;
+        top: -100px;
+        right: -100px;
+      }
+
+      /* CTA Section */
+      .cta-section {
+        padding: 5rem 2rem;
+        background: var(--background-warm);
+        text-align: center;
+      }
+
+      .cta-container {
+        max-width: 650px;
+        margin: 0 auto;
+      }
+
+      .cta-container h2 {
+        font-family: var(--font-heading);
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+
+      .cta-container p {
+        color: var(--text-subtle);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+
+      .btn-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
+        color: white;
+        padding: 0.9rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: var(--transition-bounce);
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn-cta:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 28px rgba(0, 80, 59, 0.35);
+      }
+
+      /* Footer */
+      footer {
+        background-color: var(--primary-dark);
+        color: white;
+        padding: 3rem 2rem 1.5rem;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .footer-brand img {
+        width: 32px;
+        height: 32px;
+        filter: brightness(10);
+      }
+
+      .footer-brand span {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 1.15rem;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .footer-links a:hover {
+        color: var(--accent-gold);
+      }
+
+      .footer-bottom {
+        max-width: 1200px;
+        margin: 2rem auto 0;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+      }
+
+      .footer-copyright {
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.85rem;
+      }
+
+      .footer-creators {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 0.88rem;
+        margin-top: 0.6rem;
+      }
+
+      /* Modal */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .modal-content {
+        background-color: var(--card-bg);
+        border-radius: var(--radius-xl);
+        padding: 2.5rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-xl);
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .modal-overlay.active .modal-content {
+        transform: scale(1) translateY(0);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-header h2 {
+        font-family: var(--font-heading);
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--text-dark);
+      }
+
+      .modal-close {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--background-light);
+        border: 1px solid var(--border-light);
+        border-radius: 50%;
+        font-size: 1.25rem;
+        cursor: pointer;
+        color: var(--text-subtle);
+        transition: var(--transition-base);
+      }
+
+      .modal-close:hover {
+        color: var(--text-dark);
+        background: var(--border-light);
+      }
+
+      .modal-body p {
+        color: var(--text-body);
+        line-height: 1.8;
+        font-size: 0.98rem;
+      }
+
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .steps-container {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 2.5rem;
+        }
+        .steps-container::before {
+          display: none;
+        }
+        .why-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .testimonials-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .preview-mockup-body {
+          grid-template-columns: 1fr;
+        }
+        .preview-sidebar {
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .mobile-menu-toggle {
+          display: block;
+        }
+
+        nav {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background-color: rgba(255, 255, 255, 0.98);
+          backdrop-filter: blur(20px);
+          flex-direction: column;
+          padding: 1rem;
+          box-shadow: var(--shadow-lg);
+          border-bottom-left-radius: var(--radius-md);
+          border-bottom-right-radius: var(--radius-md);
+        }
+
+        nav.active {
+          display: flex;
+        }
+
+        .hero-section {
+          min-height: 80vh;
+        }
+
+        .hero-content h1 {
+          font-size: 2.2rem;
+        }
+
+        .hero-content .hero-description {
+          font-size: 1rem;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .section-title {
+          font-size: 1.85rem;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .feature-card {
+          flex-direction: column;
+          text-align: center;
+          align-items: center;
+        }
+
+        .contact-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.25rem;
+        }
+
+        .stat-number {
+          font-size: 1.6rem;
+        }
+
+        .hours-info {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        .footer-content {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        header {
+          padding: 0.75rem 1rem;
+        }
+
+        .steps-container {
+          grid-template-columns: 1fr 1fr;
+          gap: 2rem;
+        }
+        .steps-container::before {
+          display: none;
+        }
+        .why-grid {
+          grid-template-columns: 1fr;
+        }
+        .testimonials-grid {
+          grid-template-columns: 1fr;
+        }
+        .preview-mockup-body {
+          grid-template-columns: 1fr;
+          padding: 1rem;
+        }
+        .preview-sidebar {
+          flex-direction: row;
+          overflow-x: auto;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .steps-container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/lablinx-theme.css" />
+    <style>
+      /* Index-specific: adjust body::before for landing page */
+      body::before {
+        opacity: 0.02 !important;
+      }
+      /* Override sidebar styles since index has no sidebar */
+      #sidebar {
+        display: none !important;
+      }
+
+      /* --- Hero Floating Particles --- */
+      .hero-particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+      .hero-particle {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0;
+        animation: heroParticleFloat linear infinite;
+      }
+      @keyframes heroParticleFloat {
+        0% {
+          opacity: 0;
+          transform: translateY(100%) rotate(0deg);
+        }
+        15% {
+          opacity: 0.8;
+        }
+        85% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-100%) rotate(360deg);
+        }
+      }
+
+      /* --- Typing Cursor on Highlight --- */
+      .highlight::after {
+        content: "|";
+        animation: cursorBlink 1s step-end infinite;
+        color: var(--accent-gold);
+        font-weight: 300;
+        margin-left: 2px;
+      }
+      @keyframes cursorBlink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      /* --- Animated Stat Counter --- */
+      .stat-number {
+        transition: all 0.3s ease;
+      }
+      .stat-item:hover .stat-number {
+        transform: scale(1.1);
+        color: var(--primary-light);
+      }
+      .stat-item:hover {
+        background: var(--background-warm);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+      }
+
+      /* --- Feature Card Gradient Border on Hover --- */
+      .feature-card {
+        position: relative;
+      }
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 0;
+        background: linear-gradient(180deg, #0d9488, #06b6d4);
+        border-radius: 20px 0 0 20px;
+        transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .feature-card:hover::before {
+        height: 100%;
+      }
+
+      /* --- Contact Card Icon Animation --- */
+      .contact-card:hover .contact-card-icon {
+        transform: scale(1.1) rotate(-5deg);
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        transition: all 0.3s ease;
+      }
+      .contact-card-icon {
+        transition: all 0.3s ease;
+      }
+
+      /* --- CTA Section Glow --- */
+      .cta-section {
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-section::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(13, 148, 136, 0.08),
+          transparent 60%
+        );
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      /* --- Hours Info Glow --- */
+      .hours-info {
+        position: relative;
+        overflow: hidden;
+      }
+      .hours-info::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.05),
+          transparent
+        );
+        animation: hoursShine 4s ease-in-out infinite;
+      }
+      @keyframes hoursShine {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 200%;
+        }
+      }
+
+      /* --- Scroll Progress Indicator --- */
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #0d9488, #06b6d4, #ffd54f);
+        z-index: 10000;
+        transition: width 0.1s linear;
+        border-radius: 0 2px 2px 0;
+      }
+
+      /* --- FAQ Section --- */
+      .faq-section {
+        padding: 5rem 2rem;
+        background: var(--background-warm);
+      }
+      .faq-container {
+        max-width: 750px;
+        margin: 0 auto;
+      }
+      .faq-item {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-bottom: 0.75rem;
+        overflow: hidden;
+        background: white;
+        transition: box-shadow 0.3s ease;
+      }
+      .faq-item:hover {
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      }
+      .faq-question {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.1rem 1.5rem;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--text-dark);
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        font-family: var(--font-body);
+        gap: 1rem;
+      }
+      .faq-question:hover {
+        color: var(--primary);
+      }
+      .faq-chevron {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+        opacity: 0.5;
+      }
+      .faq-item.active .faq-chevron {
+        transform: rotate(180deg);
+      }
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.35s ease,
+          padding 0.35s ease;
+        padding: 0 1.5rem;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: var(--text-subtle);
+      }
+      .faq-item.active .faq-answer {
+        max-height: 300px;
+        padding: 0 1.5rem 1.25rem;
+      }
+
+      /* --- Trusted By Section --- */
+      .trusted-section {
+        padding: 3.5rem 2rem;
+        text-align: center;
+        background: white;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+      .trusted-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-subtle);
+        margin-bottom: 2rem;
+      }
+      .trusted-logos {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3rem;
+        flex-wrap: wrap;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .trusted-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+      }
+      .trusted-item:hover {
+        opacity: 1;
+      }
+      .trusted-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+      .trusted-name {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      @media (max-width: 768px) {
+        .faq-container {
+          padding: 0 0.5rem;
+        }
+        .trusted-logos {
+          gap: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Header Navigation -->
+    <header id="siteHeader">
+      <div class="header-container">
+        <a
+          href="#"
+          class="logo-container"
+          onclick="
+            window.location.reload();
+            return false;
+          "
+        >
+          <img src="logo.png" alt="LabLinx Logo" />
+          <span>LabLinx</span>
+          <span class="logo-suffix">DLSU-D</span>
+        </a>
+        <nav id="mainNav">
+          <a
+            href="#features"
+            onclick="
+              scrollToSection('features');
+              return false;
+            "
+            >Features</a
+          >
+          <a
+            href="#contact"
+            onclick="
+              scrollToSection('contact');
+              return false;
+            "
+            >Contact</a
+          >
+          <a
+            href="#"
+            onclick="
+              openAboutModal();
+              return false;
+            "
+            >About</a
+          >
+          <a href="/login" class="btn-login">Get Started</a>
+        </nav>
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+          ☰
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-particles" id="heroParticles"></div>
+      <div class="hero-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          De La Salle University-Dasmariñas · High School Complex
+        </div>
+        <h1>
+          Smart Lab Management,<br /><span class="highlight">Simplified.</span>
+        </h1>
+        <p class="hero-description">
+          The all-in-one platform that replaces paper logbooks with real-time
+          digital tracking. Borrow equipment, reserve facilities, and manage
+          your lab resources — all from one streamlined dashboard.
+        </p>
+        <div class="hero-actions">
+          <a href="/login" class="btn-hero-primary">
+            Get Started Free &rarr;
+          </a>
+          <a
+            href="#how-it-works"
+            class="btn-hero-secondary"
+            onclick="
+              scrollToSection('how-it-works');
+              return false;
+            "
+          >
+            See How It Works
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="stats-bar">
+      <div class="stats-container">
+        <div class="stat-item animate-fade-up">
+          <div class="stat-number" data-count="500">0+</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-item animate-fade-up">
+          <div class="stat-number" data-count="1200">0+</div>
+          <div class="stat-label">Items Tracked</div>
+        </div>
+        <div class="stat-item animate-fade-up">
+          <div class="stat-number">Real-Time</div>
+          <div class="stat-label">Inventory Updates</div>
+        </div>
+        <div class="stat-item animate-fade-up">
+          <div class="stat-number">99.9%</div>
+          <div class="stat-label">System Uptime</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-section" id="how-it-works">
+      <div style="max-width: 1200px; margin: 0 auto">
+        <div class="section-label">How It Works</div>
+        <h2 class="section-title">Get Started in 4 Simple Steps</h2>
+        <p class="section-subtitle">
+          From login to lab — LabLinx makes resource management effortless.
+        </p>
+      </div>
+      <div class="steps-container">
+        <div class="step-card animate-fade-up">
+          <div class="step-number">1</div>
+          <h3>Sign In</h3>
+          <p>
+            Log in securely with your DLSU-D Microsoft account — no extra
+            passwords needed.
+          </p>
+        </div>
+        <div class="step-card animate-fade-up">
+          <div class="step-number">2</div>
+          <h3>Browse Equipment</h3>
+          <p>
+            Search the full catalog of lab equipment, tools, and facilities with
+            live availability status.
+          </p>
+        </div>
+        <div class="step-card animate-fade-up">
+          <div class="step-number">3</div>
+          <h3>Borrow & Reserve</h3>
+          <p>
+            Submit a borrow or reservation request instantly. Track approvals
+            and due dates in your dashboard.
+          </p>
+        </div>
+        <div class="step-card animate-fade-up">
+          <div class="step-number">4</div>
+          <h3>Return & Report</h3>
+          <p>
+            Return items with one click. Automatic logs and notifications keep
+            everything accountable.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <div class="section-label">What We Offer</div>
+      <h2 class="section-title">Everything You Need to Manage Lab Resources</h2>
+      <p class="section-subtitle">
+        From borrowing equipment to generating reports -- LabLinx handles it all
+        with scientific precision.
+      </p>
+      <div class="features-grid">
+        <div class="feature-card animate-fade-up">
+          <div class="feature-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="28"
+              height="28"
+            >
+              <path d="M9 3h6v4l3 10H6L9 7V3z" />
+              <path d="M6 17v2a2 2 0 002 2h8a2 2 0 002-2v-2" />
+              <line x1="12" y1="3" x2="12" y2="7" />
+            </svg>
+          </div>
+          <div class="feature-text">
+            <h3>Automated Borrowing and Returns</h3>
+            <p>
+              No more manual logbooks. Borrow and return equipment through a
+              streamlined digital process with barcode scanning and a complete
+              catalog of all lab resources.
+            </p>
+          </div>
+        </div>
+        <div class="feature-card animate-fade-up">
+          <div class="feature-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="28"
+              height="28"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <polyline points="7 14 10 10 13 13 17 8" />
+              <line x1="7" y1="18" x2="7" y2="14" />
+              <line x1="10" y1="18" x2="10" y2="10" />
+              <line x1="13" y1="18" x2="13" y2="13" />
+              <line x1="17" y1="18" x2="17" y2="8" />
+            </svg>
+          </div>
+          <div class="feature-text">
+            <h3>Live Inventory Tracking</h3>
+            <p>
+              See what is available right now. Real-time status updates prevent
+              scheduling conflicts and keep everyone informed about equipment
+              and facility availability.
+            </p>
+          </div>
+        </div>
+        <div class="feature-card animate-fade-up">
+          <div class="feature-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="28"
+              height="28"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0110 0v4" />
+              <circle cx="12" cy="16" r="1" />
+            </svg>
+          </div>
+          <div class="feature-text">
+            <h3>Secure Access and Audit Logs</h3>
+            <p>
+              Microsoft OAuth login with role-based permissions ensures only
+              authorized users access the system. Every action is logged for
+              full accountability.
+            </p>
+          </div>
+        </div>
+        <div class="feature-card animate-fade-up">
+          <div class="feature-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              width="28"
+              height="28"
+            >
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 01-3.46 0" />
+              <line x1="12" y1="2" x2="12" y2="4" />
+            </svg>
+          </div>
+          <div class="feature-text">
+            <h3>Smart Notifications</h3>
+            <p>
+              Automatic email reminders for due dates, reservation
+              confirmations, and overdue alerts. Never miss a return deadline or
+              equipment conflict again.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why LabLinx Section -->
+    <section class="why-section">
+      <div class="why-container">
+        <div class="section-label">Why LabLinx?</div>
+        <h2 class="section-title">Built for the Modern Laboratory</h2>
+        <p class="section-subtitle">
+          Designed specifically for DLSU-D, LabLinx solves real problems faced
+          by students, faculty, and lab custodians every day.
+        </p>
+        <div class="why-grid">
+          <div class="why-card animate-fade-up">
+            <div class="why-card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="24"
+                height="24"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <h3>Save Hours Every Week</h3>
+            <p>
+              Eliminate paper logbooks and manual tracking. What used to take
+              hours now happens in seconds with automated digital workflows.
+            </p>
+          </div>
+          <div class="why-card animate-fade-up">
+            <div class="why-card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="24"
+                height="24"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h3>Zero Lost Equipment</h3>
+            <p>
+              Every borrow, return, and transfer is logged with timestamps and
+              user identity. Full accountability, always.
+            </p>
+          </div>
+          <div class="why-card animate-fade-up">
+            <div class="why-card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="24"
+                height="24"
+              >
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                <path d="M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <h3>Multi-Role Support</h3>
+            <p>
+              Students, teachers, and lab custodians each get a tailored
+              dashboard with exactly the tools and visibility they need.
+            </p>
+          </div>
+          <div class="why-card animate-fade-up">
+            <div class="why-card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="24"
+                height="24"
+              >
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 01-3.46 0" />
+              </svg>
+            </div>
+            <h3>Never Miss a Deadline</h3>
+            <p>
+              Automatic email alerts for due dates, overdue items, and
+              reservation confirmations keep everyone on track.
+            </p>
+          </div>
+          <div class="why-card animate-fade-up">
+            <div class="why-card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="24"
+                height="24"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+            </div>
+            <h3>Access From Anywhere</h3>
+            <p>
+              Fully responsive web app works on desktops, tablets, and phones.
+              Manage your lab resources wherever you are on campus.
+            </p>
+          </div>
+          <div class="why-card animate-fade-up">
+            <div class="why-card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"
+                />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+            </div>
+            <h3>Instant Reports</h3>
+            <p>
+              Generate usage, inventory, and audit reports with a single click.
+              Data-driven decisions made simple for administrators.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section class="preview-section">
+      <div style="max-width: 1200px; margin: 0 auto">
+        <div class="section-label">Platform Preview</div>
+        <h2 class="section-title">A Dashboard Designed for Clarity</h2>
+        <p class="section-subtitle">
+          Clean, intuitive, and powerful. See your lab's status at a glance.
+        </p>
+      </div>
+      <div class="preview-container animate-fade-up">
+        <div class="preview-mockup">
+          <div class="preview-glow"></div>
+          <div class="preview-mockup-header">
+            <div class="preview-dot red"></div>
+            <div class="preview-dot yellow"></div>
+            <div class="preview-dot green"></div>
+            <span
+              style="
+                color: rgba(255, 255, 255, 0.4);
+                font-size: 0.75rem;
+                margin-left: 8px;
+              "
+              >LabLinx Dashboard — DLSU-D</span
+            >
+          </div>
+          <div class="preview-mockup-body">
+            <div class="preview-sidebar">
+              <div class="preview-sidebar-item active">📊 Dashboard</div>
+              <div class="preview-sidebar-item">📦 Inventory</div>
+              <div class="preview-sidebar-item">📋 Borrow Requests</div>
+              <div class="preview-sidebar-item">📅 Reservations</div>
+              <div class="preview-sidebar-item">📈 Reports</div>
+            </div>
+            <div class="preview-main">
+              <div class="preview-stat-card">
+                <div class="mini-label">Total Equipment</div>
+                <div class="mini-value">1,247</div>
+              </div>
+              <div class="preview-stat-card">
+                <div class="mini-label">Active Borrows</div>
+                <div class="mini-value">38</div>
+              </div>
+              <div class="preview-stat-card">
+                <div class="mini-label">Pending Requests</div>
+                <div class="mini-value">12</div>
+              </div>
+              <div class="preview-stat-card">
+                <div class="mini-label">Available Now</div>
+                <div class="mini-value">1,197</div>
+              </div>
+              <div class="preview-chart" id="previewChart">
+                <!-- Bars inserted by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+      <div style="max-width: 1200px; margin: 0 auto">
+        <div class="section-label">What People Say</div>
+        <h2 class="section-title">Trusted by the DLSU-D Community</h2>
+        <p class="section-subtitle">
+          Hear from students, faculty, and staff who use LabLinx every day.
+        </p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card animate-fade-up">
+          <p class="testimonial-text">
+            LabLinx makes borrowing equipment so easy. I can check availability
+            before going to the lab and submit my request online. No more
+            waiting in line!
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">ST</div>
+            <div class="testimonial-info">
+              <h4>Student</h4>
+              <p>SHS Science Track</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card animate-fade-up">
+          <p class="testimonial-text">
+            As a teacher, I love the real-time inventory. I can plan my lab
+            activities knowing exactly what's available. The notification system
+            is incredibly helpful.
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">FT</div>
+            <div class="testimonial-info">
+              <h4>Faculty</h4>
+              <p>Science Department</p>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card animate-fade-up">
+          <p class="testimonial-text">
+            Managing equipment used to be a nightmare with paper logbooks.
+            LabLinx gives me a complete overview and audit trail — it's a game
+            changer for accountability.
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">LC</div>
+            <div class="testimonial-info">
+              <h4>Lab Custodian</h4>
+              <p>HS Complex Lab</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trusted By Section -->
+    <section class="trusted-section">
+      <div class="trusted-label">Trusted by departments across DLSU-D</div>
+      <div class="trusted-logos">
+        <div class="trusted-item animate-fade-up">
+          <div class="trusted-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"
+              />
+            </svg>
+          </div>
+          <span class="trusted-name">Science Lab</span>
+        </div>
+        <div class="trusted-item animate-fade-up">
+          <div
+            class="trusted-icon"
+            style="background: linear-gradient(135deg, #e67e22, #d35400)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </div>
+          <span class="trusted-name">Sports Dept</span>
+        </div>
+        <div class="trusted-item animate-fade-up">
+          <div
+            class="trusted-icon"
+            style="background: linear-gradient(135deg, #3498db, #2980b9)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3h.008v.008h-.008V10.5zm0 3h.008v.008h-.008V13.5zm0 3h.008v.008h-.008V16.5z"
+              />
+            </svg>
+          </div>
+          <span class="trusted-name">Facilities</span>
+        </div>
+        <div class="trusted-item animate-fade-up">
+          <div
+            class="trusted-icon"
+            style="background: linear-gradient(135deg, #9b59b6, #8e44ad)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M15.75 3v1.5M12 4.5v-1.5m0 18v-1.5"
+              />
+            </svg>
+          </div>
+          <span class="trusted-name">Robotics Club</span>
+        </div>
+        <div class="trusted-item animate-fade-up">
+          <div
+            class="trusted-icon"
+            style="background: linear-gradient(135deg, #1abc9c, #16a085)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"
+              />
+            </svg>
+          </div>
+          <span class="trusted-name">HS Complex</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+      <div class="faq-container">
+        <div class="section-label animate-fade-up">Common Questions</div>
+        <h2 class="section-title animate-fade-up">
+          Frequently Asked Questions
+        </h2>
+        <p
+          class="section-subtitle animate-fade-up"
+          style="margin-bottom: 2.5rem"
+        >
+          Everything you need to know about using LabLinx.
+        </p>
+
+        <div class="faq-item animate-fade-up">
+          <button
+            class="faq-question"
+            onclick="this.parentElement.classList.toggle('active')"
+          >
+            How do I log in to LabLinx?
+            <svg
+              class="faq-chevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            Use your DLSU-D Microsoft account (@dlsud.edu.ph or
+            @hs.dlsud.edu.ph) to sign in. No separate registration is needed —
+            just click "Log In with Microsoft" on the login page.
+          </div>
+        </div>
+
+        <div class="faq-item animate-fade-up">
+          <button
+            class="faq-question"
+            onclick="this.parentElement.classList.toggle('active')"
+          >
+            Who can use LabLinx?
+            <svg
+              class="faq-chevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            LabLinx is available to all DLSU-D students, faculty, and lab
+            administrators. Students can browse and request equipment, while
+            admins can manage inventory and approve requests.
+          </div>
+        </div>
+
+        <div class="faq-item animate-fade-up">
+          <button
+            class="faq-question"
+            onclick="this.parentElement.classList.toggle('active')"
+          >
+            How do I borrow equipment?
+            <svg
+              class="faq-chevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            After logging in, go to "Lab Equipment" on your dashboard, find the
+            item you need, and click "Request." Fill in the quantity and reason,
+            then wait for admin approval. Once approved, you can pick up the
+            equipment from the lab.
+          </div>
+        </div>
+
+        <div class="faq-item animate-fade-up">
+          <button
+            class="faq-question"
+            onclick="this.parentElement.classList.toggle('active')"
+          >
+            What happens if I return an item late?
+            <svg
+              class="faq-chevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            Overdue items are flagged in your dashboard and admins are notified.
+            You'll receive email reminders before and after the due date.
+            Consistent late returns may affect future borrowing privileges.
+          </div>
+        </div>
+
+        <div class="faq-item animate-fade-up">
+          <button
+            class="faq-question"
+            onclick="this.parentElement.classList.toggle('active')"
+          >
+            Can I reserve equipment in advance?
+            <svg
+              class="faq-chevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            Yes! Use the Reservations feature to book equipment ahead of time.
+            You can set a pickup and return date. The admin will approve your
+            reservation based on availability.
+          </div>
+        </div>
+
+        <div class="faq-item animate-fade-up">
+          <button
+            class="faq-question"
+            onclick="this.parentElement.classList.toggle('active')"
+          >
+            How do I report damaged or missing equipment?
+            <svg
+              class="faq-chevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          <div class="faq-answer">
+            Go to the "Report Dashboard" in your student dashboard and file an
+            incident report (LF-05). Describe the issue, select the affected
+            item, and submit. Admins will review and take appropriate action.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact & Support Section -->
+    <section id="contact" class="contact-section">
+      <div class="contact-container">
+        <div class="section-label">Need Help?</div>
+        <h2 class="section-title">Contact & Support</h2>
+        <p class="section-subtitle">
+          We're here to help you get the most out of LabLinx.
+        </p>
+        <div class="contact-grid">
+          <div class="contact-card animate-fade-up">
+            <div class="contact-card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="32"
+                height="32"
+              >
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <h3>Account and Login Help</h3>
+            <p>
+              Having trouble signing in or accessing your account? Reach out to
+              your designated administrator.
+            </p>
+            <p><strong>Faculty/Student Issues:</strong> Admin</p>
+            <p><strong>System/Inventory:</strong> Admin</p>
+          </div>
+          <div class="contact-card animate-fade-up">
+            <div class="contact-card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="32"
+                height="32"
+              >
+                <path
+                  d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"
+                />
+              </svg>
+            </div>
+            <h3>Technical Support</h3>
+            <p>
+              Experiencing bugs or unexpected errors? Submit a support ticket or
+              contact the development team for assistance during the beta
+              testing phase.
+            </p>
+          </div>
+          <div class="contact-card animate-fade-up">
+            <div class="contact-card-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="32"
+                height="32"
+              >
+                <path
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"
+                />
+                <rect x="9" y="3" width="6" height="4" rx="1" />
+                <line x1="9" y1="12" x2="15" y2="12" />
+                <line x1="9" y1="16" x2="13" y2="16" />
+              </svg>
+            </div>
+            <h3>Policy and Resource Questions</h3>
+            <p>
+              Questions about facility rules or equipment policies? Contact the
+              Laboratory Custodian who manages monitoring, overdue alerts, and
+              inventory tracking.
+            </p>
+          </div>
+        </div>
+        <div class="hours-info">
+          <div class="hours-info-item">
+            <span class="hours-icon"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="24"
+                height="24"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path
+                  d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"
+                /></svg
+            ></span>
+            <div class="hours-info-text">
+              <h3>System Access</h3>
+              <p>Available 24 hours a day, 7 days a week</p>
+            </div>
+          </div>
+          <div class="hours-info-item">
+            <span class="hours-icon"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                width="24"
+                height="24"
+              >
+                <path
+                  d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"
+                /></svg
+            ></span>
+            <div class="hours-info-text">
+              <h3>Live Support</h3>
+              <p>Monday – Friday, 8:00 AM – 5:00 PM</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="cta-container animate-fade-up">
+        <h2>Ready to Manage Your Lab Smarter?</h2>
+        <p>
+          Join DLSU-D's digital laboratory management system. Log in with your
+          school Microsoft account to get started in seconds.
+        </p>
+        <a href="/login" class="btn-cta"> Log In Now &rarr; </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-brand">
+          <img src="logo.png" alt="LabLinx" />
+          <span>LabLinx DLSU-D</span>
+        </div>
+        <div class="footer-links">
+          <a
+            href="#features"
+            onclick="
+              scrollToSection('features');
+              return false;
+            "
+            >Features</a
+          >
+          <a
+            href="#contact"
+            onclick="
+              scrollToSection('contact');
+              return false;
+            "
+            >Contact</a
+          >
+          <a
+            href="#"
+            onclick="
+              openAboutModal();
+              return false;
+            "
+            >About</a
+          >
+          <a href="/login">Login</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          &copy; 2025 LabLinx — De La Salle University-Dasmariñas. All rights
+          reserved.
+        </div>
+        <div class="footer-creators">
+          Created by Jonalyn Alag, Miyelle Mantelle, and Kim Andry De Leon
+        </div>
+      </div>
+    </footer>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal-overlay" onclick="closeAboutModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <h2>About LabLinx</h2>
+          <button class="modal-close" onclick="closeAboutModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            LabLinx DLSU-D is a web-based resource management system developed
+            to replace manual tracking methods at the De La Salle
+            University-Dasmariñas High School Complex. It streamlines the
+            monitoring, borrowing, and reservation of lab equipment, robotics
+            equipment, sports equipment, and facilities. With real-time tracking
+            and automated notifications, LabLinx enhances accountability and
+            efficiency in resource usage.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Scroll-to-section with smooth offset
+      function scrollToSection(sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const headerHeight = 70;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerHeight;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+        const nav = document.getElementById("mainNav");
+        if (nav.classList.contains("active")) {
+          nav.classList.remove("active");
+        }
+      }
+
+      function toggleMobileMenu() {
+        const nav = document.getElementById("mainNav");
+        nav.classList.toggle("active");
+      }
+
+      function openAboutModal() {
+        const modal = document.getElementById("aboutModal");
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+        const nav = document.getElementById("mainNav");
+        if (nav.classList.contains("active")) {
+          nav.classList.remove("active");
+        }
+      }
+
+      function closeAboutModal(event) {
+        if (event && event.target !== event.currentTarget) {
+          return;
+        }
+        const modal = document.getElementById("aboutModal");
+        modal.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      // Close modal on Escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeAboutModal();
+        }
+      });
+
+      // Scroll-based header styling (throttled)
+      let scrollTicking = false;
+      window.addEventListener("scroll", () => {
+        if (!scrollTicking) {
+          requestAnimationFrame(() => {
+            const header = document.getElementById("siteHeader");
+            if (window.scrollY > 50) {
+              header.classList.add("scrolled");
+            } else {
+              header.classList.remove("scrolled");
+            }
+            // Scroll progress bar
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight =
+              document.documentElement.scrollHeight -
+              document.documentElement.clientHeight;
+            const progress = (scrollTop / scrollHeight) * 100;
+            document.getElementById("scrollProgress").style.width =
+              progress + "%";
+            scrollTicking = false;
+          });
+          scrollTicking = true;
+        }
+      });
+
+      // Intersection Observer for scroll animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -60px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".animate-fade-up").forEach((el) => {
+        observer.observe(el);
+      });
+
+      // Adaptive hero particles — reduce count on slow connections
+      (function () {
+        const container = document.getElementById("heroParticles");
+        let particleCount = 25;
+        if (navigator.connection) {
+          const ect = navigator.connection.effectiveType;
+          if (ect === "2g" || ect === "slow-2g") particleCount = 5;
+          else if (ect === "3g") particleCount = 12;
+        }
+        // Also reduce on low-end devices
+        if (
+          navigator.hardwareConcurrency &&
+          navigator.hardwareConcurrency <= 2
+        ) {
+          particleCount = Math.min(particleCount, 8);
+        }
+        const colors = [
+          "rgba(255,255,255,0.12)",
+          "rgba(13,148,136,0.18)",
+          "rgba(255,205,0,0.1)",
+          "rgba(6,182,212,0.12)",
+        ];
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < particleCount; i++) {
+          const p = document.createElement("div");
+          p.classList.add("hero-particle");
+          const size = Math.random() * 4 + 2;
+          p.style.cssText =
+            "width:" +
+            size +
+            "px;height:" +
+            size +
+            "px;background:" +
+            colors[Math.floor(Math.random() * colors.length)] +
+            ";left:" +
+            Math.random() * 100 +
+            "%;top:" +
+            Math.random() * 100 +
+            "%;animation-duration:" +
+            (Math.random() * 15 + 10) +
+            "s;animation-delay:" +
+            Math.random() * 10 +
+            "s;";
+          fragment.appendChild(p);
+        }
+        container.appendChild(fragment);
+      })();
+
+      // Generate dashboard preview chart bars
+      (function () {
+        const chart = document.getElementById("previewChart");
+        if (!chart) return;
+        const heights = [45, 70, 55, 85, 60, 92, 75, 50, 88, 65, 78, 95];
+        const fragment = document.createDocumentFragment();
+        heights.forEach(function (h) {
+          const bar = document.createElement("div");
+          bar.className = "preview-bar";
+          bar.style.height = h + "%";
+          fragment.appendChild(bar);
+        });
+        chart.appendChild(fragment);
+      })();
+
+      // Animated stat counter
+      (function () {
+        const counters = document.querySelectorAll(".stat-number[data-count]");
+        if (!counters.length) return;
+        const counterObserver = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.getAttribute("data-count"), 10);
+                let current = 0;
+                const step = Math.ceil(target / 60);
+                const counter = setInterval(function () {
+                  current += step;
+                  if (current >= target) {
+                    current = target;
+                    clearInterval(counter);
+                  }
+                  el.textContent = current.toLocaleString() + "+";
+                }, 16);
+                counterObserver.unobserve(el);
+              }
+            });
+          },
+          { threshold: 0.5 },
+        );
+        counters.forEach(function (c) {
+          counterObserver.observe(c);
+        });
+      })();
+    </script>
+  </body>
+</html>

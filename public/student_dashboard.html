@@ -1,0 +1,3054 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Student Dashboard - LabLinX DLSU-D</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Avenir:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- 1. Global Styles & DLSU Theme --- */
+      :root {
+        --primary-dark: #00503b; /* DLSU Green */
+        --primary-light: #007a5a;
+        --accent-gold: #ffcd00;
+        --accent-gold-light: rgba(255, 205, 0, 0.12);
+        --text-dark: #111827;
+        --text-subtle: #6b7280;
+        --background-light: #f9fafb;
+        --card-bg-light: #ffffff;
+        --border-light: #e5e7eb;
+
+        --primary-gradient: linear-gradient(
+          135deg,
+          #00503b 0%,
+          #007a5a 50%,
+          #009b72 100%
+        );
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md:
+          0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
+        --shadow-lg:
+          0 10px 15px -3px rgba(0, 0, 0, 0.08),
+          0 4px 6px -4px rgba(0, 0, 0, 0.08);
+        --shadow-glow: 0 0 20px rgba(0, 122, 90, 0.15);
+
+        --background-dark: #0f172a;
+        --card-bg-dark: #1e293b;
+        --text-dark-mode: #e2e8f0;
+        --text-subtle-dark-mode: #94a3b8;
+        --primary-dark-mode: var(--accent-gold);
+        --border-dark: #334155;
+
+        --status-pending: #fbbf24;
+        --status-approved: #22c55e;
+        --status-rejected: #ef4444;
+        --status-in-use: #6366f1;
+        --status-maintenance: #a855f7;
+        --status-returned: #0ea5e9;
+
+        --font-family: "Avenir", "Poppins", sans-serif;
+        --transition-fast: all 0.2s ease-in-out;
+        --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --radius: 16px;
+        --radius-sm: 10px;
+      }
+
+      /* --- Enhanced Animations --- */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* --- Custom Scrollbar --- */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(0, 80, 59, 0.2);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 80, 59, 0.35);
+      }
+
+      /* Base Styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body,
+      html {
+        font-family: var(--font-family);
+        background-color: var(--background-light);
+        color: var(--text-dark);
+        min-height: 100vh;
+        overflow-x: hidden;
+        transition: var(--transition-base);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      h1,
+      h2,
+      h3 {
+        color: var(--text-dark);
+        font-weight: 600;
+      }
+
+      /* Dark Mode */
+      body.dark {
+        background-color: var(--background-dark);
+        color: var(--text-dark-mode);
+      }
+      body.dark h1,
+      body.dark h2,
+      body.dark h3 {
+        color: var(--text-dark-mode);
+      }
+
+      /* --- 2. Sidebar Layout & Style --- */
+      #sidebar {
+        width: 260px;
+        background: var(--primary-gradient);
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 1rem;
+        z-index: 200;
+        border-right: none;
+        transition: var(--transition-base);
+        box-shadow: 4px 0 24px rgba(0, 50, 37, 0.15);
+        background-size: 200% 200%;
+        animation: gradientShift 8s ease infinite;
+      }
+      #sidebar::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L20 40M0 20L40 20' stroke='rgba(255,205,0,0.06)' stroke-width='1'/%3E%3C/svg%3E");
+        pointer-events: none;
+        border-radius: inherit;
+      }
+      body.dark #sidebar {
+        background-color: #1e293b;
+        border-right: 1px solid var(--border-dark);
+      }
+
+      #sidebar .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 2.5rem;
+        padding: 0 1rem;
+        cursor: pointer;
+      }
+      #sidebar .logo img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 213, 79, 0.3);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      #sidebar .logo-title {
+        font-weight: 700;
+        font-size: 1.6rem;
+        color: var(--accent-gold);
+      }
+
+      #sidebar nav {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+      #sidebar nav a {
+        color: rgba(255, 255, 255, 0.8);
+        padding: 14px 16px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--transition-fast);
+        position: relative;
+        margin-bottom: 0.5rem;
+      }
+      body.dark #sidebar nav a {
+        color: var(--text-subtle-dark-mode);
+      }
+
+      #sidebar nav a:hover {
+        background-color: var(--primary-light);
+        color: var(--accent-gold);
+      }
+      body.dark #sidebar nav a:hover {
+        background-color: var(--background-dark);
+        color: var(--primary-dark-mode);
+      }
+
+      #sidebar nav a.active {
+        background: rgba(255, 205, 0, 0.15);
+        color: var(--accent-gold);
+        font-weight: 600;
+        box-shadow: inset 0 0 0 1px rgba(255, 205, 0, 0.2);
+      }
+      body.dark #sidebar nav a.active {
+        background: var(--primary-dark-mode);
+        color: var(--text-dark);
+      }
+
+      .notification-badge {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        display: none;
+        min-width: 18px;
+        height: 18px;
+        text-align: center;
+        line-height: 14px;
+        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+      }
+      .nav-bottom {
+        margin-top: auto;
+      }
+
+      /* --- 3. Header / Topbar --- */
+      header {
+        margin-left: 260px;
+        height: 70px;
+        background-color: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 150;
+        border-bottom: 1px solid rgba(229, 231, 235, 0.6);
+        transition: var(--transition-base);
+      }
+      body.dark header {
+        background-color: rgba(15, 23, 42, 0.75);
+        border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+      }
+
+      main {
+        margin-left: 260px;
+        padding: 2.5rem;
+        transition: margin-left 0.3s ease;
+      }
+
+      .header-user-info {
+        font-weight: 500;
+      }
+      #studentName {
+        font-weight: 600;
+        color: var(--primary-dark);
+      }
+      body.dark #studentName {
+        color: var(--primary-dark-mode);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .dark-toggle {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-subtle);
+        transition: var(--transition-fast);
+      }
+      .dark-toggle:hover {
+        color: var(--text-dark);
+      }
+      body.dark .dark-toggle:hover {
+        color: var(--text-dark-mode);
+      }
+      .dark-toggle svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* --- 4. Main Content Sections --- */
+      main h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-dark);
+        animation: fadeInUp 0.4s ease both;
+      }
+      body.dark main h1 {
+        color: var(--accent-gold);
+      }
+      .page-subtitle {
+        margin-bottom: 2.5rem;
+        font-size: 1.1rem;
+        color: var(--text-subtle);
+      }
+
+      .page-content {
+        display: none;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+      }
+      .page-content.active {
+        display: block;
+        animation: fadeIn 0.5s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* --- 5. Dashboard Cards --- */
+      .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.75rem;
+      }
+      .dashboard-sections {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2.5rem;
+      }
+      .section-title {
+        margin-bottom: 1.5rem;
+        color: var(--primary-dark);
+        font-size: 1.5rem;
+        position: relative;
+        padding-bottom: 0.75rem;
+      }
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background: var(--primary-gradient);
+        border-radius: 2px;
+      }
+      body.dark .section-title {
+        color: var(--accent-gold);
+      }
+      .all-time-returns-content {
+        text-align: center;
+        padding: 2rem 0;
+      }
+      .all-time-counter {
+        font-size: 4rem;
+        background: linear-gradient(135deg, #10b981, #059669);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+      }
+      body.dark .all-time-counter {
+        color: var(--status-approved);
+      }
+      .all-time-label {
+        color: var(--text-subtle);
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      body.dark .all-time-label {
+        color: var(--text-subtle-dark-mode);
+      }
+      .all-time-description {
+        color: var(--text-subtle);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        line-height: 1.5;
+      }
+      .live-clock-wrap {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-light);
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.08),
+          rgba(37, 99, 235, 0.03)
+        );
+      }
+      .live-clock-time {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.1;
+        color: var(--primary-dark);
+      }
+      .live-clock-date {
+        margin-top: 0.35rem;
+        color: var(--text-subtle);
+        font-size: 0.95rem;
+      }
+      .live-refresh-status {
+        margin-top: 0.5rem;
+        color: var(--text-subtle);
+        font-size: 0.8rem;
+      }
+      .mini-calendar-wrap {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px dashed var(--border-light);
+      }
+      .mini-calendar-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--primary-dark);
+      }
+      .due-calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+        gap: 0.55rem;
+      }
+      .due-day-card {
+        border: 1px solid var(--border-light);
+        background: rgba(255, 255, 255, 0.75);
+        border-radius: 10px;
+        padding: 0.6rem;
+        text-align: center;
+      }
+      .due-day-card.has-due {
+        border-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.12);
+      }
+      .due-day-card.overdue {
+        border-color: #ef4444;
+        background: rgba(239, 68, 68, 0.12);
+      }
+      .due-day-label {
+        font-size: 0.74rem;
+        color: var(--text-subtle);
+      }
+      .due-day-date {
+        font-size: 0.88rem;
+        font-weight: 700;
+        margin-top: 0.15rem;
+      }
+      .due-day-count {
+        margin-top: 0.2rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+      body.dark .all-time-description {
+        color: var(--text-subtle-dark-mode);
+      }
+      body.dark .live-clock-time,
+      body.dark .mini-calendar-title {
+        color: var(--accent-gold);
+      }
+      body.dark .live-clock-date,
+      body.dark .live-refresh-status {
+        color: var(--text-subtle-dark-mode);
+      }
+      body.dark .live-clock-wrap,
+      body.dark .due-day-card {
+        border-color: var(--border-dark);
+      }
+      body.dark .due-day-card {
+        background: rgba(30, 41, 59, 0.6);
+      }
+      body.dark .due-day-card.has-due {
+        background: rgba(217, 119, 6, 0.2);
+      }
+      body.dark .due-day-card.overdue {
+        background: rgba(185, 28, 28, 0.2);
+      }
+      .deadline-item {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: var(--transition-fast);
+      }
+      body.dark .deadline-item {
+        border-bottom-color: var(--border-dark);
+      }
+      .deadline-item:last-child {
+        border-bottom: 1px solid var(--border-light);
+      }
+      body.dark .deadline-item:last-child {
+        border-bottom-color: var(--border-dark);
+      }
+      .deadline-item:hover {
+        background-color: #f9fafb;
+      }
+      body.dark .deadline-item:hover {
+        background-color: #1e293b;
+      }
+      .deadline-item-name {
+        font-weight: 600;
+        color: var(--text-dark);
+        flex: 1;
+      }
+      body.dark .deadline-item-name {
+        color: var(--text-dark-mode);
+      }
+      .deadline-status {
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .deadline-status.overdue {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+      .deadline-status.due-soon {
+        background-color: #fed7aa;
+        color: #9a3412;
+      }
+      .deadline-status.upcoming {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      body.dark .dashboard-sections h2 {
+        color: var(--accent-gold);
+      }
+      body.dark .deadline-status.overdue {
+        background-color: #7f1d1d;
+        color: #fca5a5;
+      }
+      body.dark .deadline-status.due-soon {
+        background-color: #7c2d12;
+        color: #fdba74;
+      }
+      body.dark .deadline-status.upcoming {
+        background-color: #14532d;
+        color: #86efac;
+      }
+      .card {
+        background-color: var(--card-bg-light);
+        border-radius: var(--radius);
+        padding: 1.75rem;
+        box-shadow: var(--shadow-md);
+        transition: var(--transition-base);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        border: 1px solid var(--border-light);
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.5s ease both;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary-gradient);
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+      .dashboard-cards .card:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .dashboard-cards .card:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .dashboard-cards .card:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .dashboard-cards .card:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .dashboard-cards .card:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .dashboard-cards .card:nth-child(1)::before {
+        background: linear-gradient(90deg, #3b82f6, #2563eb);
+      }
+      .dashboard-cards .card:nth-child(2)::before {
+        background: linear-gradient(90deg, #f59e0b, #d97706);
+      }
+      .dashboard-cards .card:nth-child(3)::before {
+        background: linear-gradient(90deg, #10b981, #059669);
+      }
+      .dashboard-cards .card:nth-child(4)::before {
+        background: linear-gradient(90deg, #ef4444, #dc2626);
+      }
+      .dashboard-cards .card:nth-child(5)::before {
+        background: linear-gradient(90deg, #f97316, #ea580c);
+      }
+      body.dark .card {
+        background-color: var(--card-bg-dark);
+        border-color: var(--border-dark);
+      }
+      .card-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .card-icon::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: inherit;
+        opacity: 0.15;
+        transform: scale(1.35);
+        z-index: -1;
+      }
+      .card-icon svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .card-body .counter {
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--primary-dark);
+      }
+      body.dark .card-body .counter {
+        color: var(--text-dark-mode);
+      }
+      .card-body span {
+        color: var(--text-subtle);
+        font-size: 1rem;
+      }
+
+      /* --- 6. Tables, Buttons, Badges --- */
+      .content-container {
+        background-color: var(--card-bg-light);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        animation: fadeInUp 0.5s ease both;
+      }
+      body.dark .content-container {
+        background-color: var(--card-bg-dark);
+        border-color: var(--border-dark);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.95rem;
+      }
+      table th,
+      table td {
+        padding: 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-light);
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+      body.dark table th,
+      body.dark table td {
+        border-bottom: 1px solid var(--border-dark);
+      }
+      @media (max-width: 768px) {
+        table th,
+        table td {
+          max-width: 150px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        table th:first-child,
+        table td:first-child {
+          max-width: 120px;
+        }
+      }
+
+      table th {
+        font-weight: 600;
+        color: var(--text-subtle);
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.75px;
+        background-color: rgba(0, 80, 59, 0.04);
+      }
+
+      table tbody tr:hover {
+        background-color: #f3f4f6;
+      }
+      body.dark table tbody tr:hover {
+        background-color: #283347;
+      }
+
+      .equipment-summary-row td {
+        vertical-align: middle;
+      }
+      .equipment-group-toggle,
+      .equipment-toggle-placeholder {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        margin-right: 10px;
+      }
+      .equipment-group-toggle {
+        border: 1px solid var(--border-light);
+        background-color: transparent;
+        color: var(--primary-dark);
+        cursor: pointer;
+        transition: var(--transition-fast);
+      }
+      body.dark .equipment-group-toggle {
+        border-color: var(--border-dark);
+        color: var(--primary-dark-mode);
+      }
+      .equipment-group-toggle[aria-expanded="true"] {
+        background-color: rgba(0, 80, 59, 0.08);
+      }
+      body.dark .equipment-group-toggle[aria-expanded="true"] {
+        background-color: rgba(255, 205, 0, 0.15);
+      }
+      .equipment-group-subtitle {
+        margin-left: 6px;
+        font-size: 0.85rem;
+        color: var(--text-subtle);
+        font-weight: 500;
+      }
+      body.dark .equipment-group-subtitle {
+        color: var(--text-subtle-dark-mode);
+      }
+      .equipment-toggle-placeholder {
+        border: 1px solid transparent;
+      }
+      .equipment-group-count {
+        margin-left: 8px;
+        font-size: 0.75rem;
+        color: var(--text-subtle);
+      }
+      body.dark .equipment-group-count {
+        color: var(--text-subtle-dark-mode);
+      }
+      .equipment-detail-row {
+        background-color: #f8fafc;
+      }
+      body.dark .equipment-detail-row {
+        background-color: #1d2538;
+      }
+
+      .btn {
+        padding: 10px 18px;
+        border: none;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: var(--transition-fast);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-request {
+        background: var(--primary-gradient);
+        color: var(--accent-gold);
+      }
+      .btn-request:hover {
+        background-color: var(--primary-light);
+        box-shadow: var(--shadow-md);
+      }
+      .btn-request:disabled {
+        background-color: #e5e7eb;
+        color: var(--text-subtle);
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+      }
+      .btn-cancel {
+        background-color: var(--text-subtle);
+        color: white;
+      }
+      .btn-cancel:hover {
+        background-color: var(--text-dark);
+      }
+
+      .status-badge {
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        text-align: center;
+        letter-spacing: 0.3px;
+      }
+      .status-Pending {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+      .status-Approved {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      .status-Rejected {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+      .status-Returned {
+        background-color: #e0f2fe;
+        color: #0c4a6e;
+      }
+      .status-PastDue {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+      .row-past-due {
+        background: rgba(220, 38, 38, 0.04);
+      }
+      .status-Reserved {
+        background-color: #dbeafe;
+        color: #1e40af;
+      }
+      .status-Cancelled {
+        background-color: #f3f4f6;
+        color: #6b7280;
+      }
+      .status-Expired {
+        background-color: #fef3c7;
+        color: #92400e;
+      }
+      .status-Completed {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      .status-Available {
+        color: var(--status-approved);
+        font-weight: 600;
+      }
+      .status-In-Use {
+        color: var(--status-in-use);
+        font-weight: 600;
+      }
+      .status-Maintenance {
+        color: var(--status-maintenance);
+        font-weight: 600;
+      }
+      .status-Unavailable {
+        color: var(--text-subtle);
+        font-weight: 600;
+      }
+
+      #notification-list .notification-item {
+        border-left: 4px solid var(--primary-dark);
+        margin-bottom: 1rem;
+        padding: 1.25rem;
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition-fast);
+        position: relative;
+        animation: slideInLeft 0.4s ease both;
+        background-color: var(--card-bg-light);
+      }
+      body.dark #notification-list .notification-item {
+        border-left-color: var(--accent-gold);
+        background-color: var(--card-bg-dark);
+      }
+      #notification-list .notification-item:hover {
+        box-shadow: var(--shadow-md);
+      }
+      #notification-list .notification-title {
+        font-weight: 600;
+        font-size: 1.05rem;
+        margin-bottom: 0.25rem;
+        color: var(--primary-dark);
+      }
+      body.dark #notification-list .notification-title {
+        color: var(--accent-gold);
+      }
+      #notification-list .notification-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      #notification-list .btn-delete-notification {
+        background-color: var(--status-rejected);
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: var(--transition-fast);
+      }
+      #notification-list .btn-delete-notification:hover {
+        opacity: 0.85;
+      }
+
+      #toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 2000;
+      }
+      .toast {
+        padding: 14px 22px;
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-lg);
+        margin-top: 10px;
+        opacity: 0;
+        transition: var(--transition-base);
+        transform: translateY(10px);
+        max-width: 400px;
+        word-wrap: break-word;
+      }
+      .toast.error {
+        background-color: var(--status-rejected);
+        color: white;
+      }
+      .toast.success {
+        background-color: var(--status-approved);
+        color: white;
+      }
+      .toast.warning {
+        background-color: var(--status-pending);
+        color: #92400e;
+      }
+      body.dark .toast {
+        background-color: var(--text-dark-mode);
+        color: var(--text-dark);
+      }
+      body.dark .toast.error {
+        background-color: #991b1b;
+        color: white;
+      }
+      body.dark .toast.success {
+        background-color: #166534;
+        color: white;
+      }
+      body.dark .toast.warning {
+        background-color: #92400e;
+        color: white;
+      }
+
+      /* --- 7. Filter & Modal Styles --- */
+      .filter-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: flex-end;
+      }
+      .search-bar {
+        flex-grow: 1;
+        min-width: 250px;
+      }
+      .search-bar input,
+      .filter-select select,
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-light);
+        font-size: 1rem;
+        background-color: var(--card-bg-light);
+        color: var(--text-dark);
+        transition: var(--transition-fast);
+      }
+      body.dark .search-bar input,
+      body.dark .filter-select select,
+      body.dark .form-group input,
+      body.dark .form-group textarea {
+        background-color: var(--background-dark);
+        border-color: var(--border-dark);
+        color: var(--text-dark-mode);
+      }
+      .search-bar input:focus,
+      .filter-select select:focus,
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 80, 59, 0.4);
+        border-color: var(--primary-light);
+      }
+      .filter-select {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .filter-select label {
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .category-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .btn-category {
+        background-color: var(--card-bg-light);
+        color: var(--text-subtle);
+        border: 1px solid var(--border-light);
+        padding: 8px 18px;
+        border-radius: 20px;
+        transition: var(--transition-fast);
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+      .btn-category:hover {
+        background-color: #f3f4f6;
+        color: var(--text-dark);
+      }
+      .btn-category.active {
+        background-color: var(--primary-dark);
+        color: white;
+        border-color: var(--primary-dark);
+        font-weight: 600;
+      }
+      body.dark .btn-category {
+        background-color: #334155;
+        border-color: #475569;
+      }
+      body.dark .btn-category.active {
+        background-color: var(--primary-dark-mode);
+        color: var(--text-dark);
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: grid;
+        place-items: center;
+        z-index: 1000;
+        opacity: 0;
+        display: none;
+        transition: opacity 0.3s ease;
+      }
+      .modal-content {
+        padding: 2.5rem;
+        border-radius: var(--radius);
+        width: 90%;
+        max-width: 550px;
+        box-shadow: var(--shadow-lg);
+        transform: scale(0.95);
+        transition: var(--transition-base);
+        background-color: var(--card-bg-light);
+      }
+      body.dark .modal-content {
+        background-color: var(--card-bg-dark);
+      }
+
+      .modal-header {
+        border-bottom: 1px solid var(--border-light);
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      body.dark .modal-header {
+        border-bottom-color: var(--border-dark);
+      }
+      .modal-header h2 {
+        font-size: 1.6rem;
+        color: var(--primary-dark);
+      }
+      body.dark .modal-header h2 {
+        color: var(--accent-gold);
+      }
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .account-form .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+      }
+
+      /* --- 8. Responsive Design --- */
+      @media (max-width: 992px) {
+        #sidebar {
+          width: 220px;
+        }
+        header,
+        main {
+          margin-left: 220px;
+        }
+        .dashboard-cards {
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 1.25rem;
+        }
+        .card {
+          padding: 1.5rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding-bottom: 70px;
+        }
+        #sidebar {
+          bottom: 0;
+          top: auto;
+          width: 100%;
+          height: 70px;
+          flex-direction: row;
+          justify-content: space-around;
+          border-top: 1px solid var(--border-light);
+          padding: 0;
+          box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        body.dark #sidebar {
+          border-top-color: var(--border-dark);
+          background-color: var(--card-bg-dark);
+        }
+        #sidebar .logo {
+          display: none;
+          cursor: pointer;
+        }
+        .nav-bottom {
+          display: contents;
+        }
+        #sidebar nav {
+          flex-direction: row;
+          width: 100%;
+          justify-content: space-around;
+          padding: 0;
+        }
+        #sidebar nav a {
+          padding: 0;
+          flex: 1;
+          height: 100%;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border-radius: 0;
+          gap: 4px;
+          margin-bottom: 0;
+          min-width: 0;
+        }
+        #sidebar nav a span {
+          font-size: 0.7rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
+        }
+        #sidebar nav a svg {
+          width: 20px;
+          height: 20px;
+          flex-shrink: 0;
+        }
+        #sidebar nav a .notification-badge {
+          top: 5px;
+          right: 5px;
+          font-size: 0.6rem;
+          min-width: 16px;
+          height: 16px;
+          line-height: 12px;
+          padding: 2px 4px;
+        }
+        #sidebar nav a.active {
+          color: var(--accent-gold);
+          background: linear-gradient(
+            to top,
+            rgba(0, 80, 59, 0.2),
+            transparent
+          );
+          box-shadow: none;
+        }
+        body.dark #sidebar nav a.active {
+          color: var(--primary-dark-mode);
+          background: linear-gradient(
+            to top,
+            rgba(255, 205, 0, 0.1),
+            transparent
+          );
+        }
+
+        header,
+        main {
+          margin-left: 0;
+        }
+        header {
+          padding: 0 1rem;
+          height: auto;
+          min-height: 60px;
+          flex-wrap: wrap;
+        }
+        .header-user-info {
+          font-size: 0.9rem;
+          flex: 1;
+          min-width: 0;
+        }
+        #studentName {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .header-actions {
+          gap: 1rem;
+        }
+        main {
+          padding: 1rem;
+          padding-bottom: 5rem;
+        }
+        h1 {
+          font-size: 1.5rem;
+        }
+        .page-subtitle {
+          font-size: 0.95rem;
+          margin-bottom: 1.5rem;
+        }
+        .dashboard-cards {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+        .dashboard-sections {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          margin-top: 1.5rem;
+        }
+        .section-title {
+          font-size: 1.25rem;
+          margin-bottom: 1rem;
+        }
+        .all-time-counter {
+          font-size: 3rem;
+        }
+        .all-time-label {
+          font-size: 0.9rem;
+        }
+        .all-time-description {
+          font-size: 0.85rem;
+        }
+        .card {
+          padding: 1.25rem;
+          flex-direction: row;
+          gap: 1rem;
+        }
+        .card-icon {
+          width: 48px;
+          height: 48px;
+          flex-shrink: 0;
+        }
+        .card-icon svg {
+          width: 24px;
+          height: 24px;
+        }
+        .card-body .counter {
+          font-size: 2.25rem;
+        }
+        .card-body span {
+          font-size: 0.9rem;
+        }
+        .content-container {
+          padding: 1.25rem;
+        }
+        .content-container > div[style*="overflow-x"] {
+          -webkit-overflow-scrolling: touch;
+          overflow-x: auto;
+          margin: 0 -1.25rem;
+          padding: 0 1.25rem;
+        }
+        table {
+          font-size: 0.85rem;
+          min-width: 600px;
+          width: 100%;
+        }
+        table th,
+        table td {
+          padding: 10px 8px;
+        }
+        table th {
+          font-size: 0.75rem;
+        }
+        .filter-row {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 1rem;
+        }
+        .search-bar,
+        .filter-select {
+          width: 100%;
+        }
+        .category-buttons {
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .btn-category {
+          padding: 8px 16px;
+          font-size: 0.85rem;
+          min-height: 36px;
+        }
+        .equipment-group-toggle {
+          min-width: 36px;
+          min-height: 36px;
+        }
+        .equipment-group-subtitle {
+          font-size: 0.8rem;
+          margin-left: 0;
+          margin-top: 4px;
+          display: block;
+        }
+        .equipment-group-count {
+          font-size: 0.7rem;
+        }
+        #lab-equipment-content .filter-controls {
+          gap: 1rem;
+        }
+        #lab-equipment-content .filter-row {
+          gap: 0.75rem;
+        }
+        #lab-equipment-content table {
+          min-width: 700px;
+        }
+        #lab-equipment-content table th:nth-child(1),
+        #lab-equipment-content table td:nth-child(1) {
+          min-width: 120px;
+        }
+        #lab-equipment-content table th:nth-child(2),
+        #lab-equipment-content table td:nth-child(2) {
+          min-width: 150px;
+        }
+        #lab-equipment-content table td:last-child .btn,
+        #item-requested-content table td:last-child .btn {
+          padding: 8px 12px;
+          font-size: 0.8rem;
+          white-space: nowrap;
+        }
+        #lab-equipment-content table td:last-child,
+        #item-requested-content table td:last-child {
+          min-width: 100px;
+        }
+        #report-dashboard-content {
+          overflow-x: hidden;
+          width: 100%;
+          max-width: 100%;
+        }
+        #report-dashboard-content .content-container {
+          margin-bottom: 1.5rem;
+          overflow-x: hidden;
+          width: 100%;
+          max-width: 100%;
+        }
+        #report-dashboard-content h2 {
+          font-size: 1.25rem;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+        #suspension-banner {
+          padding: 0.875rem !important;
+          margin-bottom: 1.25rem !important;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        #report-dashboard-content .content-container > div[style*="padding"] {
+          padding: 0.875rem !important;
+          margin-bottom: 1.25rem !important;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        #suspension-banner strong,
+        #report-dashboard-content
+          .content-container
+          > div[style*="padding"]
+          strong {
+          font-size: 0.95rem;
+          display: block;
+          margin-bottom: 0.5rem;
+        }
+        #suspension-banner p,
+        #report-dashboard-content .content-container > div[style*="padding"] p {
+          font-size: 0.875rem;
+          line-height: 1.5;
+        }
+        #countdown-timer {
+          padding: 0.875rem !important;
+          font-size: 0.9rem;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        #countdown-timer strong {
+          font-size: 0.95rem;
+          display: block;
+          word-wrap: break-word;
+        }
+        #countdown-display {
+          display: block;
+          margin-top: 0.25rem;
+          font-size: 1.1rem;
+          word-break: break-word;
+        }
+        #report-dashboard-content .form-grid {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+        #report-dashboard-content .form-group {
+          margin-bottom: 1.25rem;
+        }
+        #report-dashboard-content .form-group label {
+          font-size: 0.9rem;
+          margin-bottom: 0.5rem;
+          display: block;
+        }
+        #report-dashboard-content .form-group input,
+        #report-dashboard-content .form-group select,
+        #report-dashboard-content .form-group textarea {
+          font-size: 0.95rem;
+          padding: 10px 12px;
+        }
+        #report-dashboard-content .form-group textarea {
+          min-height: 100px;
+          resize: vertical;
+        }
+        #report-dashboard-content table {
+          min-width: 500px;
+        }
+        #report-dashboard-content table th,
+        #report-dashboard-content table td {
+          padding: 8px 6px;
+          font-size: 0.8rem;
+        }
+        #pending-reports-list {
+          width: 100%;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        #pending-reports-list table {
+          width: 100%;
+          min-width: 500px;
+        }
+        #pending-reports-list table th,
+        #pending-reports-list table td {
+          padding: 10px 8px;
+          font-size: 0.85rem;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+        #pending-reports-list table th:first-child,
+        #pending-reports-list table td:first-child {
+          min-width: 100px;
+        }
+        #pending-reports-list table th:nth-child(2),
+        #pending-reports-list table td:nth-child(2) {
+          min-width: 120px;
+        }
+        #pending-reports-list table th:last-child,
+        #pending-reports-list table td:last-child {
+          min-width: 150px;
+        }
+        .rejection-notice {
+          padding: 0.875rem !important;
+          margin-bottom: 1.25rem !important;
+        }
+        .rejection-notice strong {
+          font-size: 0.95rem !important;
+        }
+        .rejection-notice p {
+          font-size: 0.875rem !important;
+          line-height: 1.5 !important;
+        }
+        .modal-content {
+          width: 95%;
+          padding: 1.5rem;
+          max-height: 90vh;
+          overflow-y: auto;
+        }
+        .modal-header h2 {
+          font-size: 1.3rem;
+        }
+        .form-group {
+          margin-bottom: 1rem;
+        }
+        .form-group label {
+          font-size: 0.9rem;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+          font-size: 0.95rem;
+          padding: 10px 12px;
+        }
+        .form-actions {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+        .form-actions .btn {
+          width: 100%;
+        }
+        .notification-item {
+          padding: 1rem;
+        }
+        .notification-title {
+          font-size: 1rem;
+        }
+        .btn {
+          padding: 10px 18px;
+          font-size: 0.85rem;
+          min-height: 44px;
+          touch-action: manipulation;
+        }
+        .status-badge {
+          padding: 4px 10px;
+          font-size: 0.75rem;
+        }
+        .equipment-group-toggle {
+          min-width: 44px;
+          min-height: 44px;
+        }
+        .btn-request,
+        .btn-cancel {
+          min-height: 44px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        header {
+          padding: 0 0.75rem;
+        }
+        .header-user-info {
+          font-size: 0.85rem;
+        }
+        main {
+          padding: 0.75rem;
+          padding-bottom: 5rem;
+        }
+        h1 {
+          font-size: 1.25rem;
+        }
+        .page-subtitle {
+          font-size: 0.9rem;
+        }
+        .card {
+          padding: 1rem;
+        }
+        .card-body .counter {
+          font-size: 2rem;
+        }
+        .section-title {
+          font-size: 1.1rem;
+          margin-bottom: 0.875rem;
+        }
+        .all-time-counter {
+          font-size: 2.5rem;
+        }
+        .all-time-label {
+          font-size: 0.85rem;
+        }
+        .all-time-description {
+          font-size: 0.8rem;
+        }
+        .deadline-item {
+          padding: 0.875rem;
+        }
+        .deadline-status {
+          font-size: 0.75rem;
+          padding: 4px 10px;
+        }
+        .content-container {
+          padding: 1rem;
+        }
+        .content-container > div[style*="overflow-x"] {
+          margin: 0 -1rem;
+          padding: 0 1rem;
+        }
+        table {
+          min-width: 550px;
+        }
+        table th,
+        table td {
+          padding: 8px 6px;
+          font-size: 0.8rem;
+        }
+        #lab-equipment-content table {
+          min-width: 650px;
+        }
+        #lab-equipment-content table th,
+        #lab-equipment-content table td {
+          padding: 8px 5px;
+          font-size: 0.75rem;
+        }
+        .equipment-group-subtitle {
+          font-size: 0.75rem;
+          display: block;
+          margin-top: 2px;
+        }
+        .btn-category {
+          padding: 6px 12px;
+          font-size: 0.8rem;
+        }
+        #report-dashboard-content .content-container {
+          margin-bottom: 1.25rem;
+          padding: 1rem;
+          overflow-x: hidden;
+          width: 100%;
+          max-width: 100%;
+        }
+        #report-dashboard-content
+          .content-container
+          > div[style*="overflow-x"] {
+          margin: 0 -1rem;
+          padding: 0 1rem;
+        }
+        #report-dashboard-content h2 {
+          font-size: 1.1rem;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+        #suspension-banner {
+          padding: 0.75rem !important;
+          margin-bottom: 1rem !important;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        #report-dashboard-content .content-container > div[style*="padding"] {
+          padding: 0.75rem !important;
+          margin-bottom: 1rem !important;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        #suspension-banner strong,
+        #report-dashboard-content
+          .content-container
+          > div[style*="padding"]
+          strong {
+          font-size: 0.9rem;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+        #suspension-banner p,
+        #report-dashboard-content .content-container > div[style*="padding"] p {
+          font-size: 0.8rem;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+        #countdown-timer {
+          padding: 0.75rem !important;
+          font-size: 0.85rem;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        #countdown-timer strong {
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+        #countdown-display {
+          font-size: 1rem;
+          word-break: break-word;
+        }
+        #report-dashboard-content .form-group {
+          margin-bottom: 1rem;
+        }
+        #report-dashboard-content .form-group label {
+          font-size: 0.85rem;
+        }
+        #report-dashboard-content .form-group input,
+        #report-dashboard-content .form-group select,
+        #report-dashboard-content .form-group textarea {
+          font-size: 0.9rem;
+          padding: 8px 10px;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        #report-dashboard-content .form-group textarea {
+          min-height: 80px;
+          resize: vertical;
+        }
+        #report-dashboard-content .form-group label {
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+        #report-dashboard-content table {
+          min-width: 400px;
+        }
+        .rejection-notice {
+          padding: 0.75rem !important;
+        }
+        .rejection-notice strong {
+          font-size: 0.9rem !important;
+        }
+        .rejection-notice p {
+          font-size: 0.8rem !important;
+        }
+        #sidebar nav a span {
+          font-size: 0.65rem;
+        }
+        #sidebar nav a svg {
+          width: 18px;
+          height: 18px;
+        }
+        .modal-content {
+          padding: 1.25rem;
+        }
+        .btn {
+          min-height: 44px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+          min-height: 44px;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/lablinx-admin-upgrade.css" />
+    <link rel="stylesheet" href="/lablinx-theme.css" />
+  </head>
+  <body>
+    <div class="lab-node-decorator lab-node-decorator-1"></div>
+    <div class="lab-node-decorator lab-node-decorator-2"></div>
+    <div class="lab-node-decorator lab-node-decorator-3"></div>
+    <aside id="sidebar">
+      <div class="logo">
+        <img src="logo.png" alt="LabLinX Logo" />
+        <div class="logo-title">LabLinX</div>
+      </div>
+      <nav>
+        <a data-page="dashboard" class="active">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a data-page="lab-equipment" id="nav-equipment">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+            ></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Equipment</span>
+        </a>
+        <a data-page="item-requested" id="nav-my-requests">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          <span>My Requests</span>
+        </a>
+        <a data-page="report-dashboard" id="nav-report-dashboard">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+            ></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Report Dashboard</span>
+        </a>
+        <a data-page="notification">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span>Notifications</span>
+          <span class="notification-badge" id="notification-badge">0</span>
+        </a>
+        <div class="nav-bottom">
+          <a data-page="account">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Account</span>
+          </a>
+          <a href="/logout">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Log Out</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <header>
+      <div class="header-user-info">
+        Welcome, <span id="studentName">Student</span>!
+      </div>
+      <div class="header-actions">
+        <button class="dark-toggle" title="Toggle Dark Mode">
+          <svg
+            class="sun-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg
+            class="moon-icon"
+            style="display: none"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div id="dashboard-content" class="page-content active">
+        <div class="welcome-banner">
+          <span class="welcome-date" id="welcomeDate"></span>
+          <h2>Welcome back!</h2>
+          <p>
+            Track your equipment borrowing, reservations, and lab activities.
+          </p>
+        </div>
+        <h1>Dashboard</h1>
+        <p class="page-subtitle">
+          Overview of your lab activities and requests.
+        </p>
+
+        <div class="quick-stats" id="quickStatsRow">
+          <div class="quick-stat-item">
+            <div
+              class="quick-stat-icon"
+              style="
+                background: linear-gradient(135deg, #3b82f6, #2563eb);
+                color: white;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+            </div>
+            <div class="quick-stat-info">
+              <div class="quick-stat-value" id="qsBorrowed">0</div>
+              <div class="quick-stat-label">Active Borrows</div>
+            </div>
+          </div>
+          <div class="quick-stat-item">
+            <div
+              class="quick-stat-icon"
+              style="
+                background: linear-gradient(135deg, #f59e0b, #d97706);
+                color: white;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div class="quick-stat-info">
+              <div class="quick-stat-value" id="qsPending">0</div>
+              <div class="quick-stat-label">Pending</div>
+            </div>
+          </div>
+          <div class="quick-stat-item">
+            <div
+              class="quick-stat-icon"
+              style="
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="9 11 12 14 22 4" />
+                <path
+                  d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                />
+              </svg>
+            </div>
+            <div class="quick-stat-info">
+              <div class="quick-stat-value" id="qsReturned">0</div>
+              <div class="quick-stat-label">Returned</div>
+            </div>
+          </div>
+          <div class="quick-stat-item">
+            <div
+              class="quick-stat-icon"
+              style="
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+            </div>
+            <div class="quick-stat-info">
+              <div class="quick-stat-value" id="qsOverdue">0</div>
+              <div class="quick-stat-label">Overdue</div>
+            </div>
+          </div>
+        </div>
+
+        <section class="dashboard-cards">
+          <article class="card">
+            <div
+              class="card-icon"
+              style="
+                background: linear-gradient(135deg, #3b82f6, #2563eb);
+                color: white;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                ></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <div class="card-body">
+              <h2 class="counter" id="borrowedCount">0</h2>
+              <span>Items Currently Borrowed</span>
+            </div>
+          </article>
+          <article class="card">
+            <div
+              class="card-icon"
+              style="
+                background: linear-gradient(135deg, #f59e0b, #d97706);
+                color: white;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                ></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <div class="card-body">
+              <h2 class="counter" id="pendingCount">0</h2>
+              <span>Pending Requests</span>
+            </div>
+          </article>
+          <article class="card">
+            <div
+              class="card-icon"
+              style="
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="9 11 12 14 22 4"></polyline>
+                <path
+                  d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                ></path>
+              </svg>
+            </div>
+            <div class="card-body">
+              <h2 class="counter" id="returnedCount">0</h2>
+              <span>Total Items Returned</span>
+            </div>
+          </article>
+          <article class="card">
+            <div
+              class="card-icon"
+              style="
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="card-body">
+              <h2 class="counter" id="overdueCount">0</h2>
+              <span>Overdue Items</span>
+            </div>
+          </article>
+          <article class="card">
+            <div
+              class="card-icon"
+              style="
+                background: linear-gradient(135deg, #f97316, #ea580c);
+                color: white;
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </div>
+            <div class="card-body">
+              <h2 class="counter" id="dueSoonCount">0</h2>
+              <span>Due in Next 3 Days</span>
+            </div>
+          </article>
+        </section>
+
+        <section class="dashboard-sections">
+          <div class="content-container">
+            <h2 class="section-title">Upcoming Deadlines</h2>
+            <div id="upcoming-deadlines-list">
+              <p style="color: var(--text-subtle)">Loading...</p>
+            </div>
+            <div class="mini-calendar-wrap">
+              <div class="mini-calendar-title">Due Calendar (Next 7 Days)</div>
+              <div id="due-calendar-grid" class="due-calendar-grid">
+                <p style="color: var(--text-subtle)">Loading calendar...</p>
+              </div>
+            </div>
+          </div>
+          <div class="content-container">
+            <h2 class="section-title">All-Time Returns</h2>
+            <div class="all-time-returns-content">
+              <h2 class="counter all-time-counter" id="allTimeReturnsCount">
+                0
+              </h2>
+              <p class="all-time-label">Total Items Safely Returned</p>
+              <p class="all-time-description">
+                This counter tracks all successful return transactions since
+                your registration.
+              </p>
+              <div class="live-clock-wrap">
+                <div class="live-clock-time" id="liveClock">--:--:--</div>
+                <div class="live-clock-date" id="liveClockDate">
+                  Loading date...
+                </div>
+                <div class="live-refresh-status" id="liveRefreshStatus">
+                  Waiting for live updates...
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="dashboard-sections" style="margin-top: 0.5rem">
+          <div class="content-container" style="flex: 1">
+            <h2 class="section-title">Quick Actions</h2>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 0.75rem;
+                margin-top: 0.75rem;
+              "
+            >
+              <button
+                onclick="showPage('lab-equipment')"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 8px;
+                  padding: 1.1rem 0.75rem;
+                  border: 1px solid var(--border-light);
+                  border-radius: 12px;
+                  background: linear-gradient(
+                    135deg,
+                    rgba(59, 130, 246, 0.08),
+                    rgba(37, 99, 235, 0.03)
+                  );
+                  cursor: pointer;
+                  font-size: 0.85rem;
+                  font-weight: 600;
+                  color: var(--text-dark);
+                  transition: all 0.2s ease;
+                  font-family: inherit;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#3b82f6"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+                Browse Equipment
+              </button>
+              <button
+                onclick="showPage('item-requested')"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 8px;
+                  padding: 1.1rem 0.75rem;
+                  border: 1px solid var(--border-light);
+                  border-radius: 12px;
+                  background: linear-gradient(
+                    135deg,
+                    rgba(245, 158, 11, 0.08),
+                    rgba(217, 119, 6, 0.03)
+                  );
+                  cursor: pointer;
+                  font-size: 0.85rem;
+                  font-weight: 600;
+                  color: var(--text-dark);
+                  transition: all 0.2s ease;
+                  font-family: inherit;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#f59e0b"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                  />
+                </svg>
+                My Requests
+              </button>
+              <button
+                onclick="showPage('reservations')"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 8px;
+                  padding: 1.1rem 0.75rem;
+                  border: 1px solid var(--border-light);
+                  border-radius: 12px;
+                  background: linear-gradient(
+                    135deg,
+                    rgba(16, 185, 129, 0.08),
+                    rgba(5, 150, 105, 0.03)
+                  );
+                  cursor: pointer;
+                  font-size: 0.85rem;
+                  font-weight: 600;
+                  color: var(--text-dark);
+                  transition: all 0.2s ease;
+                  font-family: inherit;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#10b981"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+                  />
+                </svg>
+                Reservations
+              </button>
+              <button
+                onclick="showPage('report-dashboard')"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 8px;
+                  padding: 1.1rem 0.75rem;
+                  border: 1px solid var(--border-light);
+                  border-radius: 12px;
+                  background: linear-gradient(
+                    135deg,
+                    rgba(239, 68, 68, 0.08),
+                    rgba(220, 38, 38, 0.03)
+                  );
+                  cursor: pointer;
+                  font-size: 0.85rem;
+                  font-weight: 600;
+                  color: var(--text-dark);
+                  transition: all 0.2s ease;
+                  font-family: inherit;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                  />
+                </svg>
+                Report Issue
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Getting Started Tips -->
+        <section class="dashboard-sections" style="margin-top: 0.5rem">
+          <div
+            class="content-container"
+            style="
+              flex: 1;
+              border-left: 4px solid var(--accent-gold, #ffcd00);
+              background: linear-gradient(
+                135deg,
+                rgba(255, 205, 0, 0.04),
+                rgba(0, 80, 59, 0.02)
+              );
+            "
+          >
+            <h2
+              class="section-title"
+              style="display: flex; align-items: center; gap: 8px"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
+                />
+              </svg>
+              How It Works
+            </h2>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+                margin-top: 0.75rem;
+              "
+            >
+              <div
+                style="
+                  padding: 1rem;
+                  border-radius: 10px;
+                  background: rgba(255, 255, 255, 0.6);
+                  border: 1px solid rgba(0, 0, 0, 0.05);
+                "
+              >
+                <div
+                  style="
+                    font-weight: 700;
+                    font-size: 0.95rem;
+                    margin-bottom: 0.4rem;
+                    color: var(--primary-dark, #00503b);
+                  "
+                >
+                  1. Browse Equipment
+                </div>
+                <p style="font-size: 0.83rem; line-height: 1.5; opacity: 0.75">
+                  Go to "Lab Equipment" to see all available items across
+                  Science, Sports, Facility, and Robotics labs.
+                </p>
+              </div>
+              <div
+                style="
+                  padding: 1rem;
+                  border-radius: 10px;
+                  background: rgba(255, 255, 255, 0.6);
+                  border: 1px solid rgba(0, 0, 0, 0.05);
+                "
+              >
+                <div
+                  style="
+                    font-weight: 700;
+                    font-size: 0.95rem;
+                    margin-bottom: 0.4rem;
+                    color: var(--primary-dark, #00503b);
+                  "
+                >
+                  2. Request or Reserve
+                </div>
+                <p style="font-size: 0.83rem; line-height: 1.5; opacity: 0.75">
+                  Click "Request" on any available item. Fill in details like
+                  quantity and reason, then submit for admin approval.
+                </p>
+              </div>
+              <div
+                style="
+                  padding: 1rem;
+                  border-radius: 10px;
+                  background: rgba(255, 255, 255, 0.6);
+                  border: 1px solid rgba(0, 0, 0, 0.05);
+                "
+              >
+                <div
+                  style="
+                    font-weight: 700;
+                    font-size: 0.95rem;
+                    margin-bottom: 0.4rem;
+                    color: var(--primary-dark, #00503b);
+                  "
+                >
+                  3. Track & Return
+                </div>
+                <p style="font-size: 0.83rem; line-height: 1.5; opacity: 0.75">
+                  Monitor deadlines on your dashboard. Return items on time to
+                  maintain a clean borrowing record.
+                </p>
+              </div>
+              <div
+                style="
+                  padding: 1rem;
+                  border-radius: 10px;
+                  background: rgba(255, 255, 255, 0.6);
+                  border: 1px solid rgba(0, 0, 0, 0.05);
+                "
+              >
+                <div
+                  style="
+                    font-weight: 700;
+                    font-size: 0.95rem;
+                    margin-bottom: 0.4rem;
+                    color: var(--primary-dark, #00503b);
+                  "
+                >
+                  4. Report Issues
+                </div>
+                <p style="font-size: 0.83rem; line-height: 1.5; opacity: 0.75">
+                  Found damaged or missing equipment? File an incident report
+                  (LF-05) through the Report Dashboard tab.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div id="lab-equipment-content" class="page-content">
+        <h1>Available Lab Equipment</h1>
+        <p class="page-subtitle">
+          Browse and request items from all available inventories.
+        </p>
+        <section class="content-container">
+          <div class="filter-controls">
+            <div class="filter-row">
+              <div class="search-bar">
+                <input
+                  type="text"
+                  id="equipmentSearch"
+                  placeholder="Search by name, category, or ID..."
+                />
+              </div>
+              <div class="filter-select">
+                <label for="statusFilter">Status</label>
+                <select id="statusFilter">
+                  <option value="All">All Statuses</option>
+                  <option value="Available">Available</option>
+                  <option value="In-Use">In-Use</option>
+                  <option value="Maintenance">Maintenance</option>
+                </select>
+              </div>
+              <div class="filter-select">
+                <label for="locationFilter">Location</label>
+                <select id="locationFilter">
+                  <option value="All">All Locations</option>
+                </select>
+              </div>
+              <div class="filter-select">
+                <label for="actionFilter">Action</label>
+                <select id="actionFilter">
+                  <option value="All">All Actions</option>
+                  <option value="Requestable">Requestable</option>
+                  <option value="Unavailable">Unavailable</option>
+                </select>
+              </div>
+            </div>
+            <div class="category-buttons" id="categoryButtons">
+              <button class="btn btn-category active" data-category="All">
+                All
+              </button>
+            </div>
+          </div>
+          <div style="overflow-x: auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item ID</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Location</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="equipmentTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <div id="item-requested-content" class="page-content">
+        <h1>My Requested Items</h1>
+        <p class="page-subtitle">
+          Track the status of your equipment requests.
+        </p>
+        <section class="content-container">
+          <div class="filter-row" style="margin-bottom: 1.5rem">
+            <div class="search-bar">
+              <input
+                type="text"
+                id="requestSearch"
+                placeholder="Search by item name or ID..."
+              />
+            </div>
+            <div class="filter-select">
+              <label for="requestStatusFilter">Status</label>
+              <select id="requestStatusFilter">
+                <option value="All">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Returned">Returned</option>
+                <option value="PastDue" id="pastDueOption">Past Due (0)</option>
+              </select>
+            </div>
+          </div>
+          <div style="overflow-x: auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item ID</th>
+                  <th>Name</th>
+                  <th>Start Date</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="requestsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <div id="report-dashboard-content" class="page-content">
+        <h1>Report Dashboard</h1>
+        <p class="page-subtitle">
+          Submit incident reports for damaged or lost equipment.
+        </p>
+        <div
+          id="suspension-banner"
+          style="
+            display: none;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #fee2e2;
+            border-left: 4px solid #ef4444;
+            border-radius: 8px;
+          "
+        >
+          <strong style="color: #991b1b">Account Suspended</strong>
+          <p
+            id="suspension-message"
+            style="margin-top: 0.5rem; color: #991b1b"
+          ></p>
+        </div>
+        <section class="content-container" style="margin-bottom: 2rem">
+          <h2 style="margin-bottom: 1rem; color: var(--primary-dark)">
+            Pending Reports
+          </h2>
+          <div
+            style="
+              overflow-x: auto;
+              -webkit-overflow-scrolling: touch;
+              width: 100%;
+              max-width: 100%;
+            "
+          >
+            <div id="pending-reports-list" style="width: 100%">
+              <p style="color: var(--text-subtle)">Loading...</p>
+            </div>
+          </div>
+        </section>
+        <section class="content-container">
+          <h2 style="margin-bottom: 1rem; color: var(--primary-dark)">
+            Submit Incident Report
+          </h2>
+          <div
+            style="
+              padding: 1rem;
+              background-color: #fef3c7;
+              border-left: 4px solid #fbbf24;
+              border-radius: 8px;
+              margin-bottom: 1.5rem;
+            "
+          >
+            <strong style="color: #92400e">Warning</strong>
+            <p style="margin-top: 0.5rem; color: #92400e; margin-bottom: 0">
+              Failure to submit this report within 48 hours of the incident may
+              result in suspension from borrowing equipment.
+            </p>
+          </div>
+          <div
+            id="countdown-timer"
+            style="
+              display: none;
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background-color: #dbeafe;
+              border-radius: 8px;
+              text-align: center;
+            "
+          >
+            <strong style="color: #1e40af"
+              >Time Remaining: <span id="countdown-display">--</span></strong
+            >
+          </div>
+          <form id="incident-report-form">
+            <input type="hidden" id="report-incident-id" />
+            <input type="hidden" id="report-id" />
+            <div class="form-group">
+              <label for="equipmentId">Equipment / Facility ID:</label>
+              <input type="text" id="equipmentId" required />
+            </div>
+            <div class="form-group">
+              <label for="dateOfIncident">Date of Incident:</label>
+              <input type="date" id="dateOfIncident" required />
+            </div>
+            <div class="form-group">
+              <label for="incidentType">Type of Incident:</label>
+              <select id="incidentType" required>
+                <option value="">Select incident type</option>
+                <option value="Damage to Equipment/Facility">
+                  Damage to Equipment/Facility
+                </option>
+                <option value="Lost or Missing Item">
+                  Lost or Missing Item
+                </option>
+                <option value="Security Breach or Facility Compromise">
+                  Security Breach or Facility Compromise
+                </option>
+                <option
+                  value="Personal Injury (Contact Supervisor Immediately)"
+                >
+                  Personal Injury (Contact Supervisor Immediately)
+                </option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div
+              class="form-group"
+              id="other-description-group"
+              style="display: none"
+            >
+              <label for="otherDescription"
+                >Additional Description (Required for "Other"):</label
+              >
+              <textarea id="otherDescription" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="detailedDescription">Detailed Description:</label>
+              <textarea id="detailedDescription" rows="6" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="damageDescription"
+                >Damage Description (if applicable):</label
+              >
+              <textarea
+                id="damageDescription"
+                rows="3"
+                placeholder="Describe the nature and extent of damage, if any..."
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="replacedItems">Replaced Items (if any):</label>
+              <textarea
+                id="replacedItems"
+                rows="3"
+                placeholder="List items replaced, including quantity/model if available..."
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="replacementAction"
+                >Proposed Replacement / Resolution:</label
+              >
+              <select id="replacementAction">
+                <option value="">Select action (optional)</option>
+                <option value="Replace with same item">
+                  Replace with same item
+                </option>
+                <option value="Replace with equivalent">
+                  Replace with equivalent
+                </option>
+                <option value="Repair">Repair</option>
+                <option value="Monetary compensation">
+                  Monetary compensation
+                </option>
+                <option value="N/A">Not Applicable</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-request">
+                Submit Report
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div id="notification-content" class="page-content">
+        <h1>Notifications</h1>
+        <p class="page-subtitle">Updates on your requests and returns.</p>
+        <div id="notification-list">
+          <p>You have no new notifications.</p>
+        </div>
+      </div>
+
+      <div id="account-content" class="page-content">
+        <h1>My Account</h1>
+        <p class="page-subtitle">Manage your profile details and password.</p>
+
+        <section class="content-container" style="margin-bottom: 2rem">
+          <h2>Profile Information</h2>
+          <p
+            style="
+              color: var(--text-subtle);
+              font-size: 0.9rem;
+              margin-top: 0.5rem;
+              margin-bottom: 1.5rem;
+            "
+          >
+            Changes to your name and email require admin approval.
+          </p>
+          <form id="profileUpdateForm" class="account-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="profileFirstName">First Name</label>
+                <input type="text" id="profileFirstName" required />
+              </div>
+              <div class="form-group">
+                <label for="profileLastName">Last Name</label>
+                <input type="text" id="profileLastName" required />
+              </div>
+              <div class="form-group">
+                <label for="profileEmail">Email Address</label>
+                <input type="email" id="profileEmail" required />
+              </div>
+              <div class="form-group">
+                <label for="profileUsername">Username</label>
+                <input type="text" id="profileUsername" disabled />
+              </div>
+              <div class="form-group">
+                <label for="profileStudentID">Student ID</label>
+                <input type="text" id="profileStudentID" disabled />
+              </div>
+              <div class="form-group">
+                <label for="profileGradeLevel">Grade Level</label>
+                <input type="text" id="profileGradeLevel" disabled />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-request">
+                Request Update
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- <section class="content-container">
+          <h2>Change Password</h2>
+          <form id="passwordUpdateForm" class="account-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" required />
+              </div>
+              <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" required />
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">Confirm New Password</label>
+                <input type="password" id="confirmPassword" required />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-request">
+                Update Password
+              </button>
+            </div>
+          </form>
+        </section> -->
+      </div>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <div id="requestModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Request Item: <span id="modalItemName"></span></h2>
+        </div>
+        <form id="requestForm">
+          <input type="hidden" id="modalItemId" />
+          <div
+            id="modal-borrowing-info"
+            style="
+              display: none;
+              margin-bottom: 1rem;
+              padding: 0.75rem;
+              background-color: #dbeafe;
+              border-radius: 8px;
+              font-size: 0.9rem;
+            "
+          >
+            <strong style="color: #1e40af">Borrowing Limit:</strong>
+            <span id="modal-borrow-limit">--</span> |
+            <strong style="color: #1e40af">Active:</strong>
+            <span id="modal-active-borrows">--</span> |
+            <strong style="color: #1e40af">Remaining:</strong>
+            <span id="modal-remaining-slots">--</span> |
+            <strong style="color: #1e40af">Max Days:</strong>
+            <span id="modal-max-days">--</span>
+          </div>
+          <div class="form-group">
+            <label for="requestQuantity">Quantity:</label>
+            <input
+              type="number"
+              id="requestQuantity"
+              name="quantity"
+              min="1"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" required />
+          </div>
+          <div class="form-group">
+            <label for="dueDate">Due Date:</label>
+            <input type="date" id="dueDate" name="dueDate" required />
+          </div>
+          <div class="form-group">
+            <label for="requestReason">Reason for Request:</label>
+            <textarea
+              id="requestReason"
+              name="reason"
+              rows="4"
+              required
+            ></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-cancel modal-close-btn">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-request">
+              Submit Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/student_dashboard.js"></script>
+  </body>
+</html>

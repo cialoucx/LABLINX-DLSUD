@@ -1,0 +1,1359 @@
+/* ================================================================
+   LabLinx Scientific Theme - Laboratory Design System
+   ================================================================ */
+
+/* --- Scientific Font Stack --- */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap");
+
+/* --- Scientific Color Overrides --- */
+:root {
+  --lab-teal: #0d9488;
+  --lab-teal-light: #14b8a6;
+  --lab-cyan: #06b6d4;
+  --lab-emerald: #059669;
+  --lab-slate: #1e293b;
+  --lab-pattern-opacity: 0.035;
+  --lab-mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  --lab-glow-primary: rgba(13, 148, 136, 0.15);
+  --lab-glow-accent: rgba(255, 205, 0, 0.12);
+  --lab-border-accent: rgba(13, 148, 136, 0.25);
+}
+
+/* --- Hexagonal Grid Background Pattern (Scientific) --- */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--lab-pattern-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%23047857' fill-opacity='0.6'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+body.dark::before {
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%2314b8a6' fill-opacity='0.5'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* --- Molecular Node Decorators --- */
+.lab-node-decorator {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.lab-node-decorator-1 {
+  width: 6px;
+  height: 6px;
+  background: var(--lab-teal);
+  opacity: 0.15;
+  top: 15%;
+  right: 8%;
+  box-shadow: 0 0 20px 4px var(--lab-glow-primary);
+  animation: labNodePulse 4s ease-in-out infinite;
+}
+
+.lab-node-decorator-2 {
+  width: 4px;
+  height: 4px;
+  background: var(--lab-cyan);
+  opacity: 0.1;
+  bottom: 25%;
+  left: 5%;
+  box-shadow: 0 0 15px 3px rgba(6, 182, 212, 0.15);
+  animation: labNodePulse 5s ease-in-out infinite 1.5s;
+}
+
+.lab-node-decorator-3 {
+  width: 5px;
+  height: 5px;
+  background: var(--accent-gold, #ffcd00);
+  opacity: 0.08;
+  top: 60%;
+  right: 15%;
+  box-shadow: 0 0 18px 4px var(--lab-glow-accent);
+  animation: labNodePulse 6s ease-in-out infinite 3s;
+}
+
+@keyframes labNodePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.12;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 0.05;
+  }
+}
+
+/* --- Scientific Sidebar Enhancements --- */
+#sidebar {
+  background: linear-gradient(
+    180deg,
+    #001a14 0%,
+    #002e22 30%,
+    #003d2e 60%,
+    #004d3b 100%
+  ) !important;
+  border-right: 1px solid rgba(13, 148, 136, 0.15) !important;
+}
+
+#sidebar::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0 !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%2314b8a6' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3Ccircle cx='0' cy='0' r='1.5'/%3E%3Ccircle cx='60' cy='0' r='1.5'/%3E%3Ccircle cx='0' cy='60' r='1.5'/%3E%3Ccircle cx='60' cy='60' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") !important;
+  pointer-events: none !important;
+}
+
+/* Sidebar bottom molecular decoration */
+#sidebar::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to top, rgba(13, 148, 136, 0.08), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Sidebar Logo Enhancement */
+#sidebar .logo {
+  position: relative;
+  z-index: 1;
+}
+
+#sidebar .logo::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 1px !important;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(13, 148, 136, 0.5),
+    rgba(255, 205, 0, 0.3),
+    rgba(13, 148, 136, 0.5),
+    transparent
+  ) !important;
+}
+
+#sidebar .logo-title {
+  font-family: "Poppins", sans-serif !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  font-size: 0.95rem !important;
+  background: linear-gradient(
+    135deg,
+    #ffd54f 0%,
+    #ffecb3 50%,
+    #ffd54f 100%
+  ) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: labShimmerText 3s linear infinite !important;
+}
+
+@keyframes labShimmerText {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Sidebar nav link scientific style */
+#sidebar nav a {
+  font-size: 0.88rem !important;
+  letter-spacing: 0.2px !important;
+  border-left: 2px solid transparent !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+#sidebar nav a:hover {
+  border-left-color: var(--lab-teal) !important;
+  background: rgba(13, 148, 136, 0.08) !important;
+  color: #99f6e4 !important;
+}
+
+#sidebar nav a.active {
+  background: linear-gradient(
+    90deg,
+    rgba(13, 148, 136, 0.2),
+    rgba(255, 205, 0, 0.15)
+  ) !important;
+  border-left-color: #ffd54f !important;
+  color: #ffd54f !important;
+  font-weight: 600 !important;
+  box-shadow: inset 0 0 20px rgba(255, 205, 0, 0.05) !important;
+}
+
+/* --- Enhanced Cards with Laboratory Feel --- */
+.card,
+.inventory-card {
+  border: 1px solid rgba(13, 148, 136, 0.1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after,
+.inventory-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(
+    circle at top right,
+    rgba(13, 148, 136, 0.06),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* --- Scientific Welcome Banner --- */
+.welcome-banner {
+  background: linear-gradient(
+    135deg,
+    #001a14 0%,
+    #003d2e 40%,
+    #00503b 70%,
+    #006d4a 100%
+  ) !important;
+  border: 1px solid rgba(13, 148, 136, 0.2) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-banner::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2314b8a6' fill-opacity='0.07'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") !important;
+  pointer-events: none !important;
+}
+
+.welcome-banner::after {
+  content: "" !important;
+  position: absolute !important;
+  top: -50% !important;
+  right: -10% !important;
+  width: 300px !important;
+  height: 300px !important;
+  background: radial-gradient(
+    circle,
+    rgba(13, 148, 136, 0.15),
+    transparent 60%
+  ) !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+}
+
+/* --- Scientific Table Enhancements --- */
+table {
+  border-spacing: 0;
+}
+
+table th {
+  background: linear-gradient(135deg, #f0fdfa, #ecfdf5) !important;
+  color: #0d6b5e !important;
+  font-family: var(--lab-mono) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 1.2px !important;
+  text-transform: uppercase !important;
+  border-bottom: 2px solid rgba(13, 148, 136, 0.2) !important;
+}
+
+body.dark table th {
+  background: linear-gradient(135deg, #0f1d1a, #142320) !important;
+  color: var(--lab-teal-light) !important;
+  border-bottom-color: rgba(13, 148, 136, 0.25) !important;
+}
+
+table tbody tr {
+  transition: all 0.2s ease !important;
+}
+
+table tbody tr:hover {
+  background: rgba(13, 148, 136, 0.04) !important;
+}
+
+body.dark table tbody tr:hover {
+  background: rgba(13, 148, 136, 0.06) !important;
+}
+
+/* Alternating row subtle stripe */
+table tbody tr:nth-child(even) {
+  background: rgba(13, 148, 136, 0.015);
+}
+
+body.dark table tbody tr:nth-child(even) {
+  background: rgba(13, 148, 136, 0.025);
+}
+
+/* --- Scientific Data Labels --- */
+.card-body .counter,
+.quick-stat-info .quick-stat-value {
+  font-family: var(--lab-mono) !important;
+  letter-spacing: -0.5px !important;
+}
+
+/* --- Enhanced Status Badges --- */
+.status-badge {
+  font-family: var(--lab-mono) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  border: 1px solid transparent !important;
+}
+
+.status-Available {
+  border-color: rgba(5, 150, 105, 0.25) !important;
+}
+
+.status-Pending {
+  border-color: rgba(245, 158, 11, 0.25) !important;
+}
+
+.status-Approved {
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+
+.status-Rejected {
+  border-color: rgba(239, 68, 68, 0.25) !important;
+}
+
+/* --- Scientific Header/Topbar Enhancement --- */
+header {
+  border-bottom: 1px solid rgba(13, 148, 136, 0.1) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+}
+
+body.dark header {
+  background: rgba(15, 23, 42, 0.92) !important;
+  border-bottom-color: rgba(13, 148, 136, 0.15) !important;
+}
+
+#breadcrumb-page {
+  font-family: var(--lab-mono) !important;
+  font-size: 0.85rem !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* --- Scientific Button Enhancements --- */
+.btn {
+  position: relative !important;
+  overflow: hidden !important;
+  font-family: "Inter", sans-serif !important;
+  letter-spacing: 0.3px !important;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.4s ease,
+    height 0.4s ease;
+}
+
+.btn:active::after {
+  width: 200%;
+  height: 200%;
+}
+
+.add-form button,
+.filter-row button {
+  font-family: "Inter", sans-serif !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* --- Scientific Search Bar --- */
+.search-bar input {
+  border-color: rgba(13, 148, 136, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+.search-bar input:focus {
+  border-color: var(--lab-teal) !important;
+  box-shadow:
+    0 0 0 3px rgba(13, 148, 136, 0.1),
+    0 0 20px rgba(13, 148, 136, 0.05) !important;
+}
+
+body.dark .search-bar input:focus {
+  border-color: var(--lab-teal-light) !important;
+  box-shadow:
+    0 0 0 3px rgba(20, 184, 166, 0.12),
+    0 0 20px rgba(20, 184, 166, 0.06) !important;
+}
+
+/* --- Scientific Modal Enhancements --- */
+.modal-content,
+.modal {
+  border: 1px solid rgba(13, 148, 136, 0.15) !important;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    0 0 40px rgba(13, 148, 136, 0.05) !important;
+}
+
+body.dark .modal-content,
+body.dark .modal {
+  border-color: rgba(13, 148, 136, 0.2) !important;
+}
+
+/* --- Scientific Section Headers --- */
+.inventory-card h2,
+.page-content h2 {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  position: relative !important;
+}
+
+.inventory-card h2::before {
+  content: "";
+  width: 4px;
+  height: 24px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--lab-teal), var(--lab-emerald));
+  flex-shrink: 0;
+}
+
+body.dark .inventory-card h2::before {
+  background: linear-gradient(
+    180deg,
+    var(--lab-teal-light),
+    var(--accent-gold, #ffd54f)
+  );
+}
+
+/* --- Quick Stats Scientific Enhancement --- */
+.quick-stat-item {
+  border: 1px solid rgba(13, 148, 136, 0.1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-stat-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--lab-teal), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* --- Dashboard Card Top Border Accent --- */
+.card::before {
+  height: 3px !important;
+  background: linear-gradient(
+    90deg,
+    var(--lab-teal),
+    var(--lab-cyan),
+    var(--lab-teal)
+  ) !important;
+  background-size: 200% 100% !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.card::before {
+  opacity: 1 !important;
+  animation: labGradientSlide 2s linear infinite !important;
+}
+
+@keyframes labGradientSlide {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* --- Scientific Chart Cards --- */
+.chart-card {
+  border: 1px solid rgba(13, 148, 136, 0.1) !important;
+}
+
+/* --- Notification Items Scientific Style --- */
+#notification-list .notification-item {
+  border-left: 3px solid var(--lab-teal) !important;
+}
+
+/* --- Scientific Scrollbar --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(13, 148, 136, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 148, 136, 0.5);
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+  background: rgba(20, 184, 166, 0.25);
+}
+
+body.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(20, 184, 166, 0.4);
+}
+
+/* --- Scientific Page Title Enhancement --- */
+main h1 {
+  position: relative !important;
+  display: inline-block !important;
+}
+
+main h1::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--lab-teal), transparent);
+  border-radius: 2px;
+  margin-top: 6px;
+}
+
+body.dark main h1::after {
+  background: linear-gradient(90deg, var(--lab-teal-light), transparent);
+}
+
+/* --- Form Input Scientific Focus --- */
+.add-form input:focus,
+.add-form select:focus {
+  border-color: var(--lab-teal) !important;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1) !important;
+}
+
+body.dark .add-form input:focus,
+body.dark .add-form select:focus {
+  border-color: var(--lab-teal-light) !important;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12) !important;
+}
+
+/* --- Scientific Filter Row --- */
+.filter-select select {
+  border-color: rgba(13, 148, 136, 0.15) !important;
+}
+
+.filter-select select:focus {
+  border-color: var(--lab-teal) !important;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1) !important;
+}
+
+/* --- Pagination Scientific Style --- */
+.pagination button,
+.pagination a {
+  font-family: var(--lab-mono) !important;
+  font-size: 0.8rem !important;
+}
+
+/* --- Scientific Loading/Shimmer --- */
+@keyframes labShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 25%,
+    rgba(13, 148, 136, 0.08) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: labShimmer 1.5s infinite;
+}
+
+/* --- Scientific Tooltip Style --- */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  font-family: var(--lab-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.3px;
+}
+
+/* --- Profile Image Enhancement --- */
+.profile img {
+  border: 2px solid var(--lab-teal) !important;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* --- Footer Text for Pages --- */
+.lab-footer-text {
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-family: var(--lab-mono);
+  letter-spacing: 0.5px;
+  border-top: 1px solid rgba(13, 148, 136, 0.1);
+  margin-top: 3rem;
+}
+
+body.dark .lab-footer-text {
+  color: #475569;
+  border-top-color: rgba(13, 148, 136, 0.08);
+}
+
+/* --- Selection Color --- */
+::selection {
+  background: rgba(13, 148, 136, 0.25);
+  color: inherit;
+}
+
+body.dark ::selection {
+  background: rgba(20, 184, 166, 0.3);
+}
+
+/* --- Scientific Toast Notification Enhancement --- */
+.toast {
+  font-family: "Inter", sans-serif !important;
+  border-left: 4px solid var(--lab-teal) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(13, 148, 136, 0.1) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.toast.success {
+  border-left-color: #059669 !important;
+}
+
+.toast.error {
+  border-left-color: #dc2626 !important;
+}
+
+/* --- Scientific Dashboard Cards Grid --- */
+.dashboard-cards {
+  gap: 1.5rem !important;
+}
+
+.dashboard-cards .card {
+  border-radius: 16px !important;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* --- Scientific Card Icon Pulse --- */
+.card-icon {
+  position: relative !important;
+  transition: all 0.3s ease !important;
+}
+
+/* --- Scientific Form Container --- */
+.add-form,
+form:not(.scan-form) {
+  position: relative;
+}
+
+.add-form input,
+.add-form select,
+.add-form textarea,
+form input:not([type="hidden"]):not([type="checkbox"]):not(.scan-input),
+form select,
+form textarea {
+  border-radius: 10px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* --- Scientific Modal Header --- */
+.modal-header {
+  background: linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%) !important;
+  border-bottom: 2px solid rgba(13, 148, 136, 0.15) !important;
+  position: relative !important;
+}
+
+body.dark .modal-header {
+  background: linear-gradient(135deg, #0f1d1a 0%, #142320 100%) !important;
+  border-bottom-color: rgba(13, 148, 136, 0.2) !important;
+}
+
+.modal-header::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--lab-teal),
+    var(--lab-cyan),
+    var(--lab-teal)
+  );
+  background-size: 200% 100%;
+  animation: labGradientSlide 3s linear infinite;
+}
+
+/* --- Scientific Content Container --- */
+.content-container,
+.inventory-card {
+  border-radius: 16px !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(240, 253, 250, 0.5)
+  ) !important;
+  border: 1px solid rgba(13, 148, 136, 0.08) !important;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(13, 148, 136, 0.04) !important;
+  transition: all 0.3s ease !important;
+}
+
+body.dark .content-container,
+body.dark .inventory-card {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.98),
+    rgba(15, 29, 26, 0.5)
+  ) !important;
+  border-color: rgba(13, 148, 136, 0.12) !important;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(13, 148, 136, 0.06) !important;
+}
+
+/* --- Scientific Chart Container --- */
+.chart-container {
+  gap: 1.5rem !important;
+}
+
+.chart-card {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+.chart-card h2 {
+  font-family: "Inter", sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+}
+
+/* --- Scientific Scan Input (Admin Live Scan) --- */
+.scan-input {
+  font-family: var(--lab-mono) !important;
+  font-size: 1rem !important;
+  letter-spacing: 0.5px !important;
+  border: 2px solid rgba(13, 148, 136, 0.2) !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+.scan-input:focus {
+  border-color: var(--lab-teal) !important;
+  box-shadow:
+    0 0 0 4px rgba(13, 148, 136, 0.12),
+    0 0 30px rgba(13, 148, 136, 0.08) !important;
+}
+
+/* --- Scientific Status Box (Scan Status) --- */
+.status-box {
+  font-family: var(--lab-mono) !important;
+  font-size: 0.85rem !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(13, 148, 136, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.status-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--lab-teal), var(--lab-cyan));
+}
+
+/* --- Scientific Alert Banners --- */
+div[style*="border-left: 4px solid"] {
+  border-radius: 12px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+div[style*="border-left: 4px solid"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(13, 148, 136, 0.03));
+  pointer-events: none;
+}
+
+/* --- Scientific Page Subtitle --- */
+.page-subtitle {
+  font-size: 0.9rem !important;
+  color: #64748b !important;
+  letter-spacing: 0.2px !important;
+  margin-bottom: 1.5rem !important;
+}
+
+body.dark .page-subtitle {
+  color: #94a3b8 !important;
+}
+
+/* --- DNA Helix Decoration (Sidebar Bottom) --- */
+@keyframes labDnaFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-3px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(3px) rotate(-1deg);
+  }
+}
+
+/* --- Laboratory Badge Enhancement --- */
+.notification-badge {
+  font-family: var(--lab-mono) !important;
+  font-size: 0.65rem !important;
+  font-weight: 600 !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* --- Scientific Empty State --- */
+.empty-state,
+p[style*="color: var(--text-subtle)"] {
+  font-family: "Inter", sans-serif !important;
+  font-style: italic !important;
+}
+
+/* --- Improved Sidebar Active Indicator --- */
+#sidebar nav a.active::after {
+  content: "" !important;
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 3px !important;
+  height: 60% !important;
+  background: linear-gradient(
+    180deg,
+    var(--lab-teal-light),
+    transparent
+  ) !important;
+  border-radius: 2px 0 0 2px !important;
+}
+
+#sidebar nav a {
+  position: relative !important;
+}
+
+/* --- Scientific Card Footer --- */
+.card-footer {
+  border-top: 1px solid rgba(13, 148, 136, 0.08) !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.25s ease !important;
+}
+
+/* --- Scientific Action Buttons --- */
+button[onclick*="showPage"],
+.btn-primary,
+button[type="submit"] {
+  border-radius: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* --- Scientific Inventory Tab Navigation --- */
+.tab-button,
+.filter-tab {
+  font-family: "Inter", sans-serif !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.2px !important;
+  border-radius: 8px !important;
+  transition: all 0.25s ease !important;
+}
+
+.tab-button.active,
+.filter-tab.active {
+  background: linear-gradient(
+    135deg,
+    var(--lab-teal),
+    var(--lab-emerald)
+  ) !important;
+  color: white !important;
+  box-shadow: 0 2px 10px rgba(13, 148, 136, 0.3) !important;
+}
+
+/* --- Scientific Welcome Banner Content --- */
+.welcome-banner h2 {
+  font-family: "Poppins", sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.3px !important;
+  color: white !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.welcome-banner p {
+  color: rgba(255, 255, 255, 0.8) !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.welcome-banner .welcome-date {
+  font-family: var(--lab-mono) !important;
+  font-size: 0.8rem !important;
+  color: rgba(255, 205, 0, 0.8) !important;
+  letter-spacing: 0.5px !important;
+  z-index: 1 !important;
+}
+
+/* --- Scientific Table Cell Data --- */
+table td {
+  font-size: 0.85rem !important;
+  padding: 0.75rem 1rem !important;
+  vertical-align: middle !important;
+}
+
+/* --- Scientific Print Optimization --- */
+@media print {
+  .lab-node-decorator,
+  #sidebar,
+  .dark-toggle,
+  body::before {
+    display: none !important;
+  }
+}
+
+/* ================================================================
+   ADVANCED EFFECTS - Scientific Laboratory Enhancements
+   ================================================================ */
+
+/* --- Animated Page Transition --- */
+.page-content {
+  animation: labPageEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes labPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Dashboard Card Stagger Animation --- */
+.dashboard-cards .card:nth-child(1) {
+  animation: labCardStagger 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.05s both;
+}
+.dashboard-cards .card:nth-child(2) {
+  animation: labCardStagger 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s both;
+}
+.dashboard-cards .card:nth-child(3) {
+  animation: labCardStagger 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.25s both;
+}
+.dashboard-cards .card:nth-child(4) {
+  animation: labCardStagger 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both;
+}
+@keyframes labCardStagger {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --- Glowing Counter Numbers --- */
+.card-body .counter,
+.card-body h2 {
+  background: linear-gradient(135deg, #0f172a, #0d9488) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+body.dark .card-body .counter,
+body.dark .card-body h2 {
+  background: linear-gradient(135deg, #99f6e4, #14b8a6) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* --- Card Icon Gradient Enhancement --- */
+.card-icon {
+  border-radius: 14px !important;
+  position: relative !important;
+}
+.card-icon::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.2), transparent);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* --- Sidebar Hover Ripple Effect --- */
+#sidebar nav a::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: rgba(13, 148, 136, 0.12) !important;
+  border-radius: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  transition:
+    width 0.5s ease,
+    height 0.5s ease !important;
+  z-index: -1 !important;
+}
+
+/* --- Welcome Banner Animated Border --- */
+.welcome-banner {
+  border-radius: 20px !important;
+  position: relative !important;
+}
+.welcome-banner::before {
+  border-radius: inherit !important;
+}
+
+/* --- Animated Gradient Border on Main Content --- */
+main {
+  position: relative;
+}
+
+/* --- Scientific Loading Skeleton --- */
+@keyframes labSkeleton {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.skeleton-loading {
+  background: linear-gradient(
+    90deg,
+    rgba(13, 148, 136, 0.04) 25%,
+    rgba(13, 148, 136, 0.08) 50%,
+    rgba(13, 148, 136, 0.04) 75%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: labSkeleton 1.5s ease infinite !important;
+}
+
+/* --- Table Row Slide-in --- */
+table tbody tr {
+  animation: labRowSlide 0.3s ease both;
+}
+table tbody tr:nth-child(1) {
+  animation-delay: 0s;
+}
+table tbody tr:nth-child(2) {
+  animation-delay: 0.03s;
+}
+table tbody tr:nth-child(3) {
+  animation-delay: 0.06s;
+}
+table tbody tr:nth-child(4) {
+  animation-delay: 0.09s;
+}
+table tbody tr:nth-child(5) {
+  animation-delay: 0.12s;
+}
+table tbody tr:nth-child(6) {
+  animation-delay: 0.15s;
+}
+table tbody tr:nth-child(7) {
+  animation-delay: 0.18s;
+}
+table tbody tr:nth-child(8) {
+  animation-delay: 0.21s;
+}
+table tbody tr:nth-child(9) {
+  animation-delay: 0.24s;
+}
+table tbody tr:nth-child(10) {
+  animation-delay: 0.27s;
+}
+@keyframes labRowSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* --- Hover Glow on Action Buttons --- */
+button.return-button,
+button.edit-button,
+button.delete-button,
+.action-btn,
+.btn-action {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* --- Enhanced Modal Backdrop + Entrance --- */
+.modal {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+.modal .modal-content {
+  animation: labModalEnter 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+@keyframes labModalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* --- Scientific Scan Mode Indicator --- */
+.scan-controls select {
+  font-family: var(--lab-mono) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
+  border: 2px solid rgba(13, 148, 136, 0.2) !important;
+  border-radius: 10px !important;
+  background-image: linear-gradient(
+    135deg,
+    transparent 50%,
+    rgba(13, 148, 136, 0.03) 100%
+  ) !important;
+}
+
+/* --- Enhanced Header Breadcrumb --- */
+header .breadcrumb,
+#breadcrumb-page {
+  position: relative !important;
+}
+#breadcrumb-page::before {
+  content: "/" !important;
+  margin-right: 6px !important;
+  color: var(--lab-teal) !important;
+  font-weight: 600 !important;
+}
+
+/* --- Sidebar Logo Glow on Hover --- */
+#sidebar .logo img {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* --- Quick Stats Animated Bar --- */
+.quick-stat-item {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* --- Chart Card Gradient Header --- */
+.chart-card h2 {
+  position: relative !important;
+  padding-bottom: 12px !important;
+}
+.chart-card h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--lab-teal), var(--lab-cyan));
+  border-radius: 2px;
+}
+
+/* --- Dark Mode Toggle Button Enhancement --- */
+.dark-toggle {
+  border: 1px solid rgba(13, 148, 136, 0.15) !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* --- Notification Badge Pulse --- */
+.notification-badge:not(:empty) {
+  animation: labBadgePulse 2s ease-in-out infinite !important;
+}
+@keyframes labBadgePulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+}
+
+/* --- Toast Enter/Exit Animation --- */
+.toast {
+  animation: labToastEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  border-radius: 12px !important;
+}
+@keyframes labToastEnter {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* --- Sidebar Section Divider --- */
+#sidebar nav .nav-bottom {
+  border-top: 1px solid rgba(13, 148, 136, 0.15) !important;
+  margin-top: auto !important;
+  padding-top: 8px !important;
+}
+
+/* --- Form Submit Button Scientific Gradient --- */
+.modal-content button[type="submit"],
+.content-container button[type="submit"],
+.inventory-card button[type="submit"] {
+  background: linear-gradient(135deg, #004d40, #00796b) !important;
+  color: white !important;
+  border: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.modal-content button[type="submit"]::before,
+.content-container button[type="submit"]::before,
+.inventory-card button[type="submit"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+/* --- Scientific Empty Table Placeholder --- */
+table tbody:empty::after {
+  content: "No records found";
+  display: block;
+  text-align: center;
+  padding: 2rem;
+  color: #94a3b8;
+  font-family: var(--lab-mono);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* --- Status Badge Color Enhancements --- */
+.status-badge {
+  border-radius: 20px !important;
+  padding: 4px 12px !important;
+  font-size: 0.68rem !important;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .lab-node-decorator {
+    display: none;
+  }
+
+  .dashboard-cards .card:hover {
+    transform: none !important;
+  }
+
+  .content-container,
+  .inventory-card,
+  .chart-card {
+    border-radius: 12px !important;
+  }
+
+  .dashboard-cards .card {
+    animation-delay: 0s !important;
+  }
+
+  table tbody tr {
+    animation: none !important;
+  }
+}
