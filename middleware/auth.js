@@ -36,6 +36,12 @@ const isSameOriginStateChangingRequest = (req) => {
 
 const isAuthenticated = (req, res, next) => {
   if (req.session.user) return next();
+  // For API/fetch requests, return JSON 401 instead of redirecting.
+  // If we redirect, fetch() follows it, gets the login HTML page (200 OK),
+  // and res.json() throws a SyntaxError on the client side.
+  if (req.path.startsWith("/api/") || req.xhr || req.headers.accept?.includes("application/json")) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
   res.status(401).redirect("/login");
 };
 
