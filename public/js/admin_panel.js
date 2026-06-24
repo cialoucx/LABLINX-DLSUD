@@ -137,6 +137,14 @@ document.addEventListener("DOMContentLoaded", () => {
       // Configure Allowed Categories & API Endpoint Mapping
       const usernameLower = currentUser.username.toLowerCase();
       allowedCategories = adminCategoryMapping[usernameLower] || [];
+
+      // Guard: if this user has no admin category mapping (e.g. stale session
+      // from a student/faculty account), redirect to login.
+      if (allowedCategories.length === 0) {
+        window.location.href = "/login";
+        return;
+      }
+
       ACTIVE_INVENTORY_TYPE = allowedCategories[0];
 
       // Dynamic Menu Rendering for Super Admin

@@ -17,6 +17,10 @@ const router = express.Router();
 
 // GET /api/current-user
 router.get("/api/current-user", isAuthenticated, async (req, res) => {
+  // Prevent browser from caching this response — stale 304 responses from a
+  // previous session would return the wrong user object after re-login.
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  res.set("Pragma", "no-cache");
   try {
     const user = await User.findById(req.session.user.id)
       .select("-password")
