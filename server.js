@@ -160,6 +160,17 @@ app.use(usersRouter);
 // Serve static files from public directory (AFTER routes to avoid conflicts)
 app.use(express.static(path.join(__dirname, "public")));
 
+// ================== GLOBAL ERROR HANDLER ==================
+// Must be defined AFTER all routes. Catches any unhandled errors and prevents
+// the Vercel serverless function from crashing with a 500/no-response.
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error("Unhandled server error:", err);
+  res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error",
+  });
+});
+
 // ================== SERVER STARTUP ==================
 // Only start persistent listeners (HTTP, Websocket, Crons) when running directly
 if (!process.env.VERCEL) {
