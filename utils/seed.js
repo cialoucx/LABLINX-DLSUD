@@ -70,9 +70,24 @@ async function setupDefaultAdmins() {
           `👑 Default ${adminData.username} Created! Pass: ${adminData.password}`,
         );
       } else {
-        console.log(
-          `✅ Admin ${adminData.username} already exists. Skipping creation.`,
-        );
+        // Patch role/status in case the existing record has wrong values
+        let patched = false;
+        if (adminExists.role !== "admin") {
+          adminExists.role = "admin";
+          patched = true;
+        }
+        if (adminExists.status !== "Approved") {
+          adminExists.status = "Approved";
+          patched = true;
+        }
+        if (patched) {
+          await adminExists.save();
+          console.log(`🔧 Fixed role/status for ${adminData.username}.`);
+        } else {
+          console.log(
+            `✅ Admin ${adminData.username} already exists. Skipping creation.`,
+          );
+        }
       }
     } catch (error) {
       console.error(`❌ Error creating ${adminData.username}:`, error);
